@@ -24,13 +24,14 @@ import com.example.ReCapProject.entities.requests.maintenance.UpdateMaintenanceR
 @Service
 public class MaintenanceManager implements MaintenanceService{
 
-	private MaintenanceDao maintenanceDao;
 	private CarDao carDao;
-	
+	private MaintenanceDao maintenanceDao;
+		
 	@Autowired
 	public MaintenanceManager(MaintenanceDao maintenanceDao, CarDao carDao) {
-		this.maintenanceDao = maintenanceDao;
+		
 		this.carDao = carDao;
+		this.maintenanceDao = maintenanceDao;
 	}
 
 	@Override
@@ -46,8 +47,8 @@ public class MaintenanceManager implements MaintenanceService{
 		
 		Maintenance maintenance = new Maintenance();
 		maintenance.setCar(car);
-		maintenance.setMaintenanceDate(entity.getMaintenanceDate());
 		maintenance.setInMaintenance(true);
+		maintenance.setMaintenanceDate(entity.getMaintenanceDate());
 		
 		this.maintenanceDao.save(maintenance);
 		return new SuccessResult(Messages.MAINTENANCE_ADDED);
@@ -88,7 +89,7 @@ public class MaintenanceManager implements MaintenanceService{
 	
 	
 	private Result checkIfCarIsAvailable(int carId) {
-		if(this.carDao.getById(carId).isAvailable() == false)
+		if(!this.carDao.getById(carId).isAvailable())
 			return new ErrorResult(Messages.CAR_IS_NOT_AVAILABLE);
 		
 		return new SuccessResult();

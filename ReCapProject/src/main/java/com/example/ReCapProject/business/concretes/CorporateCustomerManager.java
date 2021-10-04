@@ -39,10 +39,10 @@ public class CorporateCustomerManager implements CorporateCustomerService {
 			return result;
 		
 		CorporateCustomer corporateCustomer = new CorporateCustomer();
-		corporateCustomer.setCompanyName(entity.getCompanyName());
+		corporateCustomer.setPassword(entity.getPassword().trim());
+		corporateCustomer.setTaxNumber(entity.getTaxNumber().trim());
+		corporateCustomer.setCompanyName(entity.getCompanyName().toLowerCase().trim());
 		corporateCustomer.setEmail(entity.getEmail().toLowerCase());
-		corporateCustomer.setPassword(entity.getPassword());
-		corporateCustomer.setTaxNumber(entity.getTaxNumber());
 		
 		this.corporateCustomerDao.save(corporateCustomer);
 		return new SuccessResult(Messages.CUSTOMER_ADDED);
@@ -58,10 +58,11 @@ public class CorporateCustomerManager implements CorporateCustomerService {
 			return result;
 		
 		CorporateCustomer corporateCustomer = corporateCustomerDao.getById(entity.getCorporateCustomerId());
-		corporateCustomer.setCompanyName(entity.getCompanyName());
+		corporateCustomer.setCompanyName(entity.getCompanyName().toLowerCase().trim());
+		corporateCustomer.setTaxNumber(entity.getTaxNumber().trim());
 		corporateCustomer.setEmail(entity.getEmail().toLowerCase());
-		corporateCustomer.setPassword(entity.getPassword());
-		corporateCustomer.setTaxNumber(entity.getTaxNumber());
+		corporateCustomer.setPassword(entity.getPassword().trim());
+		
 		
 		this.corporateCustomerDao.save(corporateCustomer);
 		return new SuccessResult(Messages.CUSTOMER_UPDATED);
@@ -83,7 +84,7 @@ public class CorporateCustomerManager implements CorporateCustomerService {
 	
 	private Result checkIfEmailExists(String email) {
 		
-		if(this.corporateCustomerDao.existsByEmail(email))
+		if(this.corporateCustomerDao.existsByEmail(email.toLowerCase()))
 			return new ErrorResult(Messages.EMAIL_ALREADY_IN_USE);
 		
 		return new SuccessResult();
@@ -92,7 +93,7 @@ public class CorporateCustomerManager implements CorporateCustomerService {
 	
 	private Result checkIfTaxNumberExists(String taxNumber) {
 		
-		if(this.corporateCustomerDao.existsByEmail(taxNumber))
+		if(this.corporateCustomerDao.existsByTaxNumber(taxNumber.trim()))
 			return new ErrorResult(Messages.TAX_NUMBER_ALREADY_IN_USE);
 		
 		return new SuccessResult();

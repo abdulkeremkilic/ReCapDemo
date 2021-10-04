@@ -38,8 +38,8 @@ public class BrandManager implements BrandService{
 			return result;
 		
 		Brand brand = new Brand();
-		brand.setBrandName(entity.getBrandName());
-		brand.setModelName(entity.getModelName());
+		brand.setBrandName(entity.getBrandName().toLowerCase().trim());
+		brand.setModelName(entity.getModelName().toLowerCase().trim());
 		brand.setModelYear(entity.getModelYear());
 		
 		this.brandDao.save(brand);
@@ -55,8 +55,8 @@ public class BrandManager implements BrandService{
 			return result;
 		
 		Brand brand = this.brandDao.getById(entity.getBrandId());
-		brand.setBrandName(entity.getBrandName());
-		brand.setModelName(entity.getModelName());
+		brand.setBrandName(entity.getBrandName().toLowerCase().trim());
+		brand.setModelName(entity.getModelName().toLowerCase().trim());
 		brand.setModelYear(entity.getModelYear());
 		
 		this.brandDao.save(brand);
@@ -76,7 +76,7 @@ public class BrandManager implements BrandService{
 
 	
 	private Result checkIfBrandExists(String brandName, String modelName, int modelYear) {
-		if(this.brandDao.existsByBrandNameAndModelNameAndModelYear(brandName, modelName, modelYear))
+		if(this.brandDao.existsByBrandNameAndModelNameAndModelYear(brandName.toLowerCase().trim(), modelName.toLowerCase().trim(), modelYear))
 			return new ErrorResult(Messages.BRAND_ALREADY_EXISTS);
 		
 		return new SuccessResult();

@@ -73,10 +73,11 @@ public class RentalManager implements RentalService {
 	@Override
 	public Result addForCorporate(CreateRentalRequest entity) {
 		
-		var result = BusinessRules.run(checkIfCarIsAvailable(), 
+		var result = BusinessRules.run(checkIfCarIsAvailable(entity.getCarId()), 
 				checkCarsPickUpCityIsAvailable(entity.getCarId(), entity.getPickUpCityId()), 
 				checkCarReturnCityIsAvailable(entity.getReturnCityId()),
-				findexPointService.checkFindexPointsForCorporate(corporateCustomerDao.getById(entity.getUserId()), carDao.getById(entity.getCarId())));
+				findexPointService.checkFindexPointsForCorporate(corporateCustomerDao.getById(entity.getUserId()), carDao.getById(entity.getCarId())),
+				checkRentalDates(entity.getRentDate(), entity.getReturnDate()));
 
 		
 		if(result != null)
@@ -84,7 +85,6 @@ public class RentalManager implements RentalService {
 
 		
 		Car car = this.carDao.getById(entity.getCarId());
-		car.setAvailable(false);
 		
 		ApplicationUser user = this.applicationUserDao.getById(entity.getUserId());
 		
@@ -99,17 +99,17 @@ public class RentalManager implements RentalService {
 		rental.setReturnDate(returnDate);
 		rental.setPickUpKilometer(car.getCurrentKilometer());
 		
-		
 		List<AdditionalService> additionalServices = new ArrayList<AdditionalService>();
+		
+		if(entity.getAdditionalServiceId() != null) {
 		for (Integer additionalServiceId : entity.getAdditionalServiceId()) {
 			additionalServices.add(this.additionalServiceDao.getById(additionalServiceId));
+			}
 		}
 		rental.setAdditionalServices(additionalServices);
-		
 		rental.setRentalPrice(calculateTotalPrice(entity.getCarId(), additionalServices, entity.getReturnCityId(), rentDate, returnDate).getData());
 		
 		this.rentalDao.save(rental);
-		this.carDao.save(car);
 		
 		return new SuccessResult(Messages.RENTAL_ADDED);
 	}
@@ -118,17 +118,16 @@ public class RentalManager implements RentalService {
 	@Override
 	public Result addForIndividual(CreateRentalRequest entity) {
 		
-		var result = BusinessRules.run(checkIfCarIsAvailable(), 
+		var result = BusinessRules.run(checkIfCarIsAvailable(entity.getCarId()),
 				findexPointService.checkFindexPointsForIndividual(individualCustomerDao.getById(entity.getUserId()), carDao.getById(entity.getCarId())),
-				checkCarsPickUpCityIsAvailable(entity.getCarId(), entity.getPickUpCityId()), checkCarReturnCityIsAvailable(entity.getReturnCityId()));
+				checkCarsPickUpCityIsAvailable(entity.getCarId(), entity.getPickUpCityId()), checkCarReturnCityIsAvailable(entity.getReturnCityId()),
+				checkRentalDates(entity.getRentDate(), entity.getReturnDate()));
 						
 		
 		if(result != null)
 			return result;
 	
-		
 		Car car = this.carDao.getById(entity.getCarId());
-		car.setAvailable(false);
 		
 		ApplicationUser user = this.applicationUserDao.getById(entity.getUserId());
 		
@@ -144,16 +143,17 @@ public class RentalManager implements RentalService {
 		rental.setPickUpKilometer(car.getCurrentKilometer());	
 		
 		List<AdditionalService> additionalServices = new ArrayList<AdditionalService>();
+		
+		if(entity.getAdditionalServiceId() != null) {
 		for (Integer additionalServiceId : entity.getAdditionalServiceId()) {
 			AdditionalService additionalService = this.additionalServiceDao.getById(additionalServiceId);
 			additionalServices.add(additionalService);
+			}
 		}
 		rental.setAdditionalServices(additionalServices);
-		
 		rental.setRentalPrice(calculateTotalPrice(entity.getCarId(), additionalServices, entity.getReturnCityId(), rentDate, returnDate).getData());
 		
 		this.rentalDao.save(rental);
-		this.carDao.save(car);
 		
 		return new SuccessResult(Messages.RENTAL_ADDED);
 	}
@@ -162,7 +162,9 @@ public class RentalManager implements RentalService {
 	@Override
 	public Result update(UpdateRentalRequest entity) {
 		
-		var result = BusinessRules.run(checkCarReturnCityIsAvailable(entity.getReturnCityId()));
+		var result = BusinessRules.run(checkCarReturnCityIsAvailable(entity.getReturnCityId()), 
+				checkReturnDate(this.rentalDao.getById(entity.getRentalId()).getRentDate(), entity.getReturnDate()),
+				checkIfReturnIsDelayed(entity.getRentalId(), entity.getReturnDate()));
 		
 		if(result != null)
 			return result;
@@ -174,10 +176,24 @@ public class RentalManager implements RentalService {
 		rental.setReturnKilometer(entity.getReturnKilometer());
 		rental.setReturnDate(returnDate);
 		
+		List<AdditionalService> additionalServices = rental.getAdditionalServices();
+		
+		if(entity.getAdditionalServiceId() != null) {
+		for (Integer additionalServiceId : entity.getAdditionalServiceId()) {
+			additionalServices.add(this.additionalServiceDao.getById(additionalServiceId));
+			}
+		}
+		rental.setRentalPrice(calculateTotalPrice(rental.getCar().getCarId(), 
+				additionalServices, entity.getReturnCityId(), 
+				this.rentalDao.getById(entity.getRentalId()).getRentDate(), 
+				returnDate).getData());
+		
 		Car car = rental.getCar();
 		car.setAvailable(entity.isReturned());
 		car.setCurrentKilometer(entity.getReturnKilometer());
 		car.setCity(this.cityDao.getById(entity.getReturnCityId()));
+		
+		this.rentalDao.save(rental);
 		
 		var result2 = BusinessRules.run(checkCarIsReturned(entity));	// When car is returned; the Invoice is being created automatically.
 		
@@ -190,9 +206,6 @@ public class RentalManager implements RentalService {
 		createInvoiceRequest.setRentalId(entity.getRentalId());
 		
 		this.invoiceService.add(createInvoiceRequest);
-		
-		this.carDao.save(car);
-		this.rentalDao.save(rental);
 		
 		return new SuccessResult(Messages.RENTAL_UPDATED);
 	}
@@ -233,9 +246,9 @@ public class RentalManager implements RentalService {
 	}
 	
 	
-	private Result checkIfCarIsAvailable() {
+	private Result checkIfCarIsAvailable(int carId) {
 		
-		if(this.carDao.existsByIsAvailableIsTrue()) 
+		if(this.carDao.getById(carId).isAvailable()) 
 			return new SuccessResult();
 		
 		return new ErrorResult(Messages.CAR_IS_NOT_AVAILABLE);
@@ -278,7 +291,7 @@ public class RentalManager implements RentalService {
 			double deposit = (this.carDao.getById(carId).getDailyPrice() * 90);
 			return new SuccessDataResult<Double>(deposit);
 		}
-		double totalPrice =(calculateTotalRentalPrice(carId, additionalServices, rentDate, returnDate).getData() + calculateIfCarReturnedToDifferentCity(carId, returnCityId).getData());
+		double totalPrice =(calculateRentalPrice(carId, additionalServices, rentDate, returnDate).getData() + calculateIfCarReturnedToDifferentCity(carId, returnCityId).getData());
 		return new SuccessDataResult<Double>(totalPrice);
 	}
 	
@@ -303,7 +316,7 @@ public class RentalManager implements RentalService {
 	}
 	
 	
-	private DataResult<Double> calculateTotalRentalPrice(int carId, List<AdditionalService> additionalServices, LocalDate rentDate, LocalDate returnDate) {
+	private DataResult<Double> calculateRentalPrice(int carId, List<AdditionalService> additionalServices, LocalDate rentDate, LocalDate returnDate) {
 		
 		long days = ChronoUnit.DAYS.between(rentDate, returnDate);
 		
@@ -321,6 +334,42 @@ public class RentalManager implements RentalService {
 				totalFee += additionalService.getAdditionalServiceFee();			
 		
 		return new SuccessDataResult<Double>(totalFee);
+	}
+	
+	
+	private Result checkRentalDates(String rentDate, String returnDate) {
+		
+		DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		LocalDate rentDate1 = LocalDate.parse(rentDate, dateFormat);
+		LocalDate returnDate1 = LocalDate.parse(returnDate, dateFormat);
+		LocalDate today = LocalDate.parse(LocalDate.now().toString());
+		
+		if(rentDate1.isBefore(today) || returnDate1.isBefore(rentDate1))
+			return new ErrorResult("Invalid dates");
+		
+		return new SuccessResult();
+	}
+	
+	private Result checkReturnDate(LocalDate rentDate, String returnDate) {
+		
+		DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		LocalDate returnDate1 = LocalDate.parse(returnDate, dateFormat);
+		
+		if(returnDate1.isBefore(rentDate))
+			return new ErrorResult("Invalid Return Date");
+		
+		return new SuccessResult();
+	}
+	
+	private Result checkIfReturnIsDelayed(int rentalId, String returnDate) {
+		
+		DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		LocalDate returnDate1 = LocalDate.parse(returnDate, dateFormat);
+		
+		if(this.rentalDao.getById(rentalId).getReturnDate() != null && returnDate1.isAfter(this.rentalDao.getById(rentalId).getReturnDate())) 
+			System.out.println("Car has been delayed additional fee will be charged!");
+		
+		return new SuccessResult();
 	}
 	
 }

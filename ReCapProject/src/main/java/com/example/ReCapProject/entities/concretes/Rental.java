@@ -39,13 +39,6 @@ public class Rental {
 	@Column(name = "rental_id")
 	private int rentalId;
 	
-	@Column(name = "rent_date")
-	private LocalDate rentDate;
-	
-	@Nullable
-	@Column(name = "return_date")
-	private LocalDate returnDate;
-	
 	@NotNull
 	@Column(name = "pick_up_kilometer")
 	private long pickUpKilometer;
@@ -57,7 +50,18 @@ public class Rental {
 	@Column(name = "rental_price")
 	private double rentalPrice;
 	
-	@OneToOne(mappedBy = "rental", cascade = CascadeType.MERGE)
+	@Column(name = "is_payed")
+	private boolean isPayed = false;
+	
+	@Column(name = "rent_date")
+	private LocalDate rentDate;
+	
+	@Nullable
+	@Column(name = "return_date")
+	private LocalDate returnDate;
+	
+	@OneToOne(cascade = CascadeType.MERGE)
+	@JoinColumn(name = "invoice_id")
 	private Invoice invoice;
 	
 	@ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)

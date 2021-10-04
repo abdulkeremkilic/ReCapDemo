@@ -39,10 +39,10 @@ public class CarManager implements CarService {
 	@Autowired
 	public CarManager(CarDao carDao, CarImageDao carImageDao, CityDao cityDao, BrandDao brandDao, ColorDao colorDao) {
 		this.carDao = carDao;
-		this.carImageDao = carImageDao;
 		this.cityDao = cityDao;
 		this.brandDao = brandDao;
 		this.colorDao = colorDao;
+		this.carImageDao = carImageDao;
 	}
 
 	@Override
@@ -59,9 +59,9 @@ public class CarManager implements CarService {
 		car.setColor(color);
 		car.setCity(city);
 		car.setDailyPrice(entity.getDailyPrice());
-		car.setDescription(entity.getDescription());
-		car.setMinFindexPoint(entity.getMinFindexPoint());
 		car.setCurrentKilometer(entity.getKilometer());
+		car.setMinFindexPoint(entity.getMinFindexPoint());
+		car.setDescription(entity.getDescription().toLowerCase().trim());
 		
 		// Default image
 		if(this.carImageDao.getByCar_CarId(car.getCarId()).isEmpty()) {
@@ -81,11 +81,11 @@ public class CarManager implements CarService {
 		City city = this.cityDao.getById(entity.getCityId());
 		
 		Car car = this.carDao.getById(entity.getCarId());
-		car.setDailyPrice(entity.getDailyPrice());
-		car.setDescription(entity.getDescription());
-		car.setAvailable(entity.isAvailable());
-		car.setCurrentKilometer(entity.getKilometer());
 		car.setCity(city);
+		car.setAvailable(entity.isAvailable());
+		car.setDailyPrice(entity.getDailyPrice());
+		car.setCurrentKilometer(entity.getKilometer());
+		car.setDescription(entity.getDescription().toLowerCase().trim());
 		
 		this.carDao.save(car);
 		return new SuccessResult(Messages.CAR_UPDATED);

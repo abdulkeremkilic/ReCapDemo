@@ -38,7 +38,7 @@ public class ColorManager implements ColorService{
 			return result;
 		
 		Color color = new Color();
-		color.setColorName(entity.getColorName());
+		color.setColorName(entity.getColorName().toLowerCase().trim());
 		
 		this.colorDao.save(color);
 		return new SuccessResult(Messages.COLOR_ADDED);
@@ -53,7 +53,7 @@ public class ColorManager implements ColorService{
 			return result;
 		
 		Color color = this.colorDao.getByColorId(entity.getColorId());
-		color.setColorName(entity.getColorName());
+		color.setColorName(entity.getColorName().toLowerCase().trim());
 		
 		this.colorDao.save(color);
 		return new SuccessResult(Messages.COLOR_UPDATED);
@@ -73,7 +73,7 @@ public class ColorManager implements ColorService{
 	
 	private Result checkIfColorExists(String colorName) {
 		
-		if(this.colorDao.existsByColorName(colorName))
+		if(this.colorDao.existsByColorName(colorName.toLowerCase().trim()))
 			return new ErrorResult(Messages.COLOR_ALREADY_EXISTS);
 		
 		return new SuccessResult();

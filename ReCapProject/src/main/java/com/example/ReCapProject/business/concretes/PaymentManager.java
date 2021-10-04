@@ -11,8 +11,10 @@ import com.example.ReCapProject.core.utilities.business.BusinessRules;
 import com.example.ReCapProject.core.utilities.results.ErrorResult;
 import com.example.ReCapProject.core.utilities.results.Result;
 import com.example.ReCapProject.core.utilities.results.SuccessResult;
+import com.example.ReCapProject.dataAccess.abstracts.CarDao;
 import com.example.ReCapProject.dataAccess.abstracts.CreditCardDao;
 import com.example.ReCapProject.dataAccess.abstracts.RentalDao;
+import com.example.ReCapProject.entities.concretes.Car;
 import com.example.ReCapProject.entities.concretes.CreditCard;
 import com.example.ReCapProject.entities.concretes.Rental;
 import com.example.ReCapProject.entities.requests.creditCard.CreateCreditCardRequest;
@@ -24,30 +26,32 @@ public class PaymentManager implements PaymentService {
 
 	private CreditCardDao creditCardDao;
 	private RentalDao rentalDao;
+	private CarDao carDao;
 	
 	private PosService posService;
 	private CreditCardService creditCardService;
 	
 	@Autowired
-	public PaymentManager(CreditCardDao creditCardDao, RentalDao rentalDao, PosService posService, CreditCardService creditCardService) {
+	public PaymentManager(CreditCardDao creditCardDao, RentalDao rentalDao, CarDao carDao, PosService posService, CreditCardService creditCardService) {
 		
-		this.creditCardDao = creditCardDao;
+		this.carDao = carDao;
 		this.rentalDao = rentalDao;
+		this.creditCardDao = creditCardDao;
 		
-		this.posService = posService;
 		this.creditCardService = creditCardService;
+		this.posService = posService;
 	}
 
 	@Override
 	public Result add(CreatePaymentRequest entity) {
 		
 		CreateCreditCardRequest creditCard = new CreateCreditCardRequest();
-		creditCard.setCardBeholderName(entity.getCardBeholderName());
+		creditCard.setCardBeholderName(entity.getCardBeholderName().toLowerCase().trim());
 		creditCard.setCardNumber(entity.getCardNumber());
-		creditCard.setCvvCode(entity.getCvvCode());
 		creditCard.setExpireDate(entity.getExpireDate());
-		creditCard.setSaveCard(entity.isSave());
+		creditCard.setCvvCode(entity.getCvvCode());
 		creditCard.setUserId(entity.getUserId());
+		creditCard.setSaveCard(entity.isSave());
 		
 		if (!creditCardService.add(creditCard).isSuccess())
 			return new ErrorResult(Messages.CREDIT_CARD_IS_INVALID);
@@ -55,14 +59,22 @@ public class PaymentManager implements PaymentService {
 		CreatePaymentRequest paymentRequest = new CreatePaymentRequest();
 		paymentRequest.setCardBeholderName(creditCard.getCardBeholderName());
 		paymentRequest.setCardNumber(creditCard.getCardNumber());
-		paymentRequest.setCvvCode(creditCard.getCvvCode());
 		paymentRequest.setExpireDate(creditCard.getExpireDate());
+		paymentRequest.setCvvCode(creditCard.getCvvCode());
 		paymentRequest.setRentalId(entity.getRentalId());
 		
 		if(!this.posService.withdraw(paymentRequest).isSuccess()) {
 			this.rentalDao.deleteById(entity.getRentalId());
 			return new ErrorResult(Messages.ERROR_MESSAGE);
 		}
+		
+		
+		Rental rental = this.rentalDao.getById(entity.getRentalId());
+		rental.setPayed(true);
+		
+		Car car = this.rentalDao.getById(entity.getRentalId()).getCar();
+		car.setAvailable(false);
+		this.carDao.save(car);
 		
 		return new SuccessResult(Messages.PAYMENT_SUCCESSFUL);	
 	}
@@ -71,9 +83,9 @@ public class PaymentManager implements PaymentService {
 	@Override
 	public Result addWithSavedCreditCard(CreatePaymentWithSavedCreditCardRequest entity) {
 		
-		CreditCard creditCard = this.creditCardDao.getById(entity.getCreditCardId());
-		
 		Rental rental = this.rentalDao.getById(entity.getRentalId());
+		
+		CreditCard creditCard = this.creditCardDao.getById(entity.getCreditCardId());
 		
 		var result = BusinessRules.run(checkUserForCreditCard(rental, creditCard));
 		
@@ -83,14 +95,18 @@ public class PaymentManager implements PaymentService {
 		CreatePaymentRequest paymentRequest = new CreatePaymentRequest();
 		paymentRequest.setCardBeholderName(creditCard.getCardBeholderName());
 		paymentRequest.setCardNumber(creditCard.getCreditCardNumber());
-		paymentRequest.setCvvCode(creditCard.getCvvCode());
 		paymentRequest.setExpireDate(creditCard.getExpireDate());
+		paymentRequest.setCvvCode(creditCard.getCvvCode());
 		paymentRequest.setRentalId(entity.getRentalId());
 		
 		if(!this.posService.withdraw(paymentRequest).isSuccess()) {
 			this.rentalDao.deleteById(rental.getRentalId()); // If payment is not done; delete the rental object from the database!
 			return new ErrorResult(Messages.ERROR_MESSAGE);
 		}
+		
+		Car car = this.rentalDao.getById(entity.getRentalId()).getCar();
+		car.setAvailable(false);
+		this.carDao.save(car);
 		
 		return new SuccessResult(Messages.PAYMENT_SUCCESSFUL);
 	}

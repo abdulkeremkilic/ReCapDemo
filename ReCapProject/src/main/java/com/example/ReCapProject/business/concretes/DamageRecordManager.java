@@ -35,7 +35,7 @@ public class DamageRecordManager implements DamageRecordService{
 		
 		DamageRecord damageRecord = new DamageRecord();
 		damageRecord.setCar(this.carDao.getById(entity.getCarId()));
-		damageRecord.setRecordInfo(entity.getRecordInfo());
+		damageRecord.setRecordInfo(entity.getRecordInfo().trim());
 		
 		this.damageRecordDao.save(damageRecord);
 		return new SuccessResult(Messages.DAMAGE_RECORD_ADDED);
@@ -46,7 +46,7 @@ public class DamageRecordManager implements DamageRecordService{
 	public Result update(UpdateDamageRecordRequest entity) {
 		
 		DamageRecord damageRecord = this.damageRecordDao.getById(entity.getRecordId());
-		damageRecord.setRecordInfo(entity.getRecordInfo());
+		damageRecord.setRecordInfo(entity.getRecordInfo().trim());
 		
 		this.damageRecordDao.save(damageRecord);
 		return new SuccessResult(Messages.DAMAGE_RECORD_UPDATED);

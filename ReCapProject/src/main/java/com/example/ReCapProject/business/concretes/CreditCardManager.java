@@ -53,11 +53,11 @@ public class CreditCardManager implements CreditCardService {
 		ApplicationUser user = this.applicationUserDao.getById(entity.getUserId());
 		
 		CreditCard creditCard = new CreditCard();
-		creditCard.setCreditCardNumber(entity.getCardNumber());
+		creditCard.setUser(user);
 		creditCard.setCvvCode(entity.getCvvCode());
 		creditCard.setExpireDate(entity.getExpireDate());
-		creditCard.setCardBeholderName(entity.getCardBeholderName());
-		creditCard.setUser(user);
+		creditCard.setCreditCardNumber(entity.getCardNumber());
+		creditCard.setCardBeholderName(entity.getCardBeholderName().toLowerCase().trim());
 		
 		if(entity.isSaveCard()) 
 			this.creditCardDao.save(creditCard);
@@ -72,14 +72,14 @@ public class CreditCardManager implements CreditCardService {
 		var result = BusinessRules.run(checkCreditCardNumber(entity.getCardNumber()), 
 				checkCreditCardCvv(entity.getCvvCode()), 
 				checkCreditCardExpiryDate(entity.getExpireDate()));
+		
 		if(result != null)
 			return result;
 		
 		CreditCard creditCard = this.creditCardDao.getById(entity.getCardId());
-		creditCard.setCardName(entity.getCardName());
-		creditCard.setCreditCardNumber(entity.getCardNumber());
 		creditCard.setCvvCode(entity.getCvvCode());
 		creditCard.setExpireDate(entity.getExpireDate());
+		creditCard.setCreditCardNumber(entity.getCardNumber());
 		
 		this.creditCardDao.save(creditCard);
 		return new SuccessResult(Messages.CREDIT_CARD_UPDATED);

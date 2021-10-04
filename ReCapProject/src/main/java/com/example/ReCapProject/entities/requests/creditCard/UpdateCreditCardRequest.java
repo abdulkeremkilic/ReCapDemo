@@ -21,10 +21,6 @@ public class UpdateCreditCardRequest implements Request {
 	
 	@NotNull
 	@NotBlank
-	private String cardName;
-	
-	@NotNull
-	@NotBlank
 	private String cardNumber;
 	
 	@NotNull

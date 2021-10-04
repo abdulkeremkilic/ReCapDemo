@@ -12,9 +12,6 @@ import com.example.ReCapProject.entities.dtos.CarDetailDto;
 @Repository
 public interface CarDao extends JpaRepository<Car, Integer> {
 	
-	boolean existsByIsAvailableIsTrue();
-	boolean existsByCarImagesIsNull();
-	
 	@Query("Select new com.example.ReCapProject.entities.dtos.CarDetailDto"
 	  		+ " (c.dailyPrice, b.modelName, b.brandName, b.modelYear, co.colorName, c.isAvailable)"
 	  		+ " From Car c Inner Join c.brand b"

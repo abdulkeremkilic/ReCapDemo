@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.ReCapProject.business.abstracts.LogInService;
+import com.example.ReCapProject.business.constants.Messages;
 import com.example.ReCapProject.core.utilities.business.BusinessRules;
 import com.example.ReCapProject.core.utilities.results.ErrorResult;
 import com.example.ReCapProject.core.utilities.results.Result;
@@ -31,9 +32,9 @@ public class LogInManager implements LogInService{
 			return result;
 		
 		if(applicationUserDao.getByEmail(logInRequest.getEmail()).getPassword().equals(logInRequest.getPassword()))
-			return new SuccessResult("You have successfully logged in!");
+			return new SuccessResult(Messages.SUCCESSFULLY_LOGGED_IN);
 		
-		return new ErrorResult("User Email or Password is wrong!");
+		return new ErrorResult(Messages.USER_INFO_INVALID);
 		
 	}
 	
@@ -41,7 +42,7 @@ public class LogInManager implements LogInService{
 		if(applicationUserDao.existsByEmail(email))
 			return new SuccessResult();
 		
-		return new ErrorResult("User does't exist!");
+		return new ErrorResult(Messages.USER_DOES_NOT_EXIST);
 	}
 
 }

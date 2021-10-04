@@ -38,7 +38,7 @@ public class CityManager implements CityService {
 			return result;
 		
 		City city = new City();
-		city.setCityName(entity.getCityName());
+		city.setCityName(entity.getCityName().toLowerCase().trim());
 		
 		this.cityDao.save(city);
 		return new SuccessResult(Messages.CITY_ADDED);
@@ -54,7 +54,7 @@ public class CityManager implements CityService {
 			return result;
 		
 		City city = this.cityDao.getById(entity.getCityId());
-		city.setCityName(entity.getCityName());
+		city.setCityName(entity.getCityName().toLowerCase().trim());
 		
 		this.cityDao.save(city);
 		return new SuccessResult(Messages.CITY_UPDATED);
@@ -76,7 +76,7 @@ public class CityManager implements CityService {
 	
 	private Result checkIfCityExists(String cityName) {
 		
-		if(this.cityDao.existsByCityName(cityName))
+		if(this.cityDao.existsByCityName(cityName.toLowerCase().trim()))
 			return new ErrorResult(Messages.CITY_ALREADY_EXISTS);
 		
 		return new SuccessResult();

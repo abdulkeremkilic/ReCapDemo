@@ -1,7 +1,10 @@
 package com.example.ReCapProject.entities.requests.rental;
 
+import java.util.List;
+
 import com.example.ReCapProject.core.entities.abstracts.Request;
 import com.sun.istack.NotNull;
+import com.sun.istack.Nullable;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,5 +31,8 @@ public class UpdateRentalRequest implements Request  {
 	
 	@NotNull
 	private boolean isReturned;
+	
+	@Nullable
+	private List<Integer> additionalServiceId;
 	
 }

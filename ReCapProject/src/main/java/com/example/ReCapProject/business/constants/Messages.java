@@ -117,4 +117,10 @@ public class Messages {
 	
 	//Payments
 	public static String PAYMENT_SUCCESSFUL = "The payment has been made successfully!";
+	
+	
+	//Logins
+	public static String SUCCESSFULLY_LOGGED_IN = "You have successfully logged in!";
+	public static String USER_INFO_INVALID = "User Email or Password is wrong!";
+	public static String USER_DOES_NOT_EXIST = "User does't exist!";
 }

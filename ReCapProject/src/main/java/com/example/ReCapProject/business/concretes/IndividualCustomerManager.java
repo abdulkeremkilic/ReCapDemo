@@ -39,11 +39,12 @@ public class IndividualCustomerManager implements IndividualCustomerService{
 			return result;
 		
 		IndividualCustomer individualCustomer = new IndividualCustomer();
-		individualCustomer.setFirstName(entity.getFirstName());
-		individualCustomer.setLastName(entity.getLastName());
+		individualCustomer.setFirstName(entity.getFirstName().toLowerCase().trim());
+		individualCustomer.setLastName(entity.getLastName().toLowerCase().trim());
+		individualCustomer.setNationalIdNumber(entity.getNationalId().trim());
 		individualCustomer.setEmail(entity.getEmail().toLowerCase());
-		individualCustomer.setPassword(entity.getPassword());
-		individualCustomer.setNationalIdNumber(entity.getNationalId());
+		individualCustomer.setPassword(entity.getPassword().trim());
+		
 		
 		this.individualCustomerDao.save(individualCustomer);
 		return new SuccessResult(Messages.CUSTOMER_ADDED);
@@ -59,11 +60,11 @@ public class IndividualCustomerManager implements IndividualCustomerService{
 			return result;
 		
 		IndividualCustomer individualCustomer = individualCustomerDao.getById(entity.getIndividualCustomerId());
-		individualCustomer.setFirstName(entity.getFirstName());
-		individualCustomer.setLastName(entity.getLastName());
+		individualCustomer.setFirstName(entity.getFirstName().toLowerCase().trim());
+		individualCustomer.setLastName(entity.getLastName().toLowerCase().trim());
+		individualCustomer.setNationalIdNumber(entity.getNationalId().trim());
 		individualCustomer.setEmail(entity.getEmail().toLowerCase());
-		individualCustomer.setPassword(entity.getPassword());
-		individualCustomer.setNationalIdNumber(entity.getNationalId());
+		individualCustomer.setPassword(entity.getPassword().trim());
 		
 		this.individualCustomerDao.save(individualCustomer);
 		return new SuccessResult(Messages.CUSTOMER_UPDATED);
@@ -94,7 +95,7 @@ public class IndividualCustomerManager implements IndividualCustomerService{
 	
 	private Result checkIfNationalIdNumberExists(String nationalIdNumber) {
 		
-		if(this.individualCustomerDao.existsByNationalIdNumber(nationalIdNumber))
+		if(this.individualCustomerDao.existsByNationalIdNumber(nationalIdNumber.trim()))
 			return new ErrorResult(Messages.NATIONAL_ID_NUMBER_ALREADY_IN_USE);
 		
 		return new SuccessResult();

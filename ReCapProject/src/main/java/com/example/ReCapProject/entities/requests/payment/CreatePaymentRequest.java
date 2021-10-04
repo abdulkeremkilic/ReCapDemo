@@ -40,7 +40,4 @@ public class CreatePaymentRequest {
 	@NotNull
 	@NotBlank
 	private String expireDate;
-	
-	
-	
 }

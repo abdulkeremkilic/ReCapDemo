@@ -38,7 +38,7 @@ public class AdditionalServiceManager implements AdditionalServiceService {
 			return result;
 		
 		AdditionalService additionalService = new AdditionalService();
-		additionalService.setAdditionalServiceName(entity.getAdditionalServiceName());
+		additionalService.setAdditionalServiceName(entity.getAdditionalServiceName().toLowerCase().trim());
 		additionalService.setAdditionalServiceFee(entity.getAdditionalServiceFee());
 		
 		this.additionalServiceDao.save(additionalService);
@@ -55,7 +55,7 @@ public class AdditionalServiceManager implements AdditionalServiceService {
 			return result;
 		
 		AdditionalService additionalService = this.additionalServiceDao.getById(entity.getAdditionalServiceId());
-		additionalService.setAdditionalServiceName(entity.getAdditionalServiceName());
+		additionalService.setAdditionalServiceName(entity.getAdditionalServiceName().toLowerCase().trim());
 		additionalService.setAdditionalServiceFee(entity.getAdditionalServiceFee());
 		
 		this.additionalServiceDao.save(additionalService);
@@ -87,7 +87,7 @@ public class AdditionalServiceManager implements AdditionalServiceService {
 
 	public Result checkIfServiceExists(String additionalServiceName) {
 		
-		if(this.additionalServiceDao.existsByAdditionalServiceName(additionalServiceName))
+		if(this.additionalServiceDao.existsByAdditionalServiceName(additionalServiceName.toLowerCase().trim()))
 			return new ErrorResult(Messages.ADDITIONAL_SERVICE_ALREADY_EXISTS);
 		
 		return new SuccessResult();
