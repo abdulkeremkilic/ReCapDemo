@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import com.example.ReCapProject.core.utilities.results.DataResult;
 import com.example.ReCapProject.core.utilities.results.Result;
 import com.example.ReCapProject.entities.concretes.Car;
-import com.example.ReCapProject.entities.dtos.CarDto;
+import com.example.ReCapProject.entities.dtos.CarDetailDto;
 import com.example.ReCapProject.entities.requests.car.CreateCarRequest;
 import com.example.ReCapProject.entities.requests.car.DeleteCarRequest;
 import com.example.ReCapProject.entities.requests.car.UpdateCarRequest;
@@ -26,7 +26,7 @@ public interface CarService  {
 	DataResult<List<Car>> getCarByColorName(String colorName);
 	DataResult<List<Car>> getByCityName(String cityName);
 	
-	DataResult<List<CarDto>> getCarsDetail();
+	DataResult<List<CarDetailDto>> getCarsDetail();
 	
 	
 }

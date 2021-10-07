@@ -16,7 +16,7 @@ import com.example.ReCapProject.business.abstracts.IndividualCustomerService;
 import com.example.ReCapProject.core.utilities.results.DataResult;
 import com.example.ReCapProject.core.utilities.results.Result;
 import com.example.ReCapProject.entities.concretes.IndividualCustomer;
-import com.example.ReCapProject.entities.dtos.IndividualCustomerDto;
+import com.example.ReCapProject.entities.dtos.IndividualCustomerDetailDto;
 import com.example.ReCapProject.entities.requests.individualCustomer.CreateIndividualCustomerRequest;
 import com.example.ReCapProject.entities.requests.individualCustomer.DeleteIndividualCustomerRequest;
 import com.example.ReCapProject.entities.requests.individualCustomer.UpdateIndividualCustomerRequest;
@@ -59,13 +59,13 @@ public class IndividualCustomersController {
 	
 	
 	@GetMapping("/getdetails")
-	public DataResult<List<IndividualCustomerDto>> getIndividualCustmersDetail() {
+	public DataResult<List<IndividualCustomerDetailDto>> getIndividualCustmersDetail() {
 		return this.individualCustomerService.getIndividualCustomersDetail();
 	}
 	
 	
 	@GetMapping("getbyid")
-	public DataResult<IndividualCustomerDto> getIndividualCustomerById(int userId) {
+	public DataResult<IndividualCustomerDetailDto> getIndividualCustomerById(int userId) {
 		return this.individualCustomerService.getDetailsById(userId);
 	}
 	

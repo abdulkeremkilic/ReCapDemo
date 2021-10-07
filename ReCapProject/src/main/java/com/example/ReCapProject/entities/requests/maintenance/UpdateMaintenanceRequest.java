@@ -12,6 +12,6 @@ import lombok.Setter;
 public class UpdateMaintenanceRequest {
 
 	private int maintenanceId;
-	private boolean inMaintenance;
+	private boolean isReturned;
 	
 }

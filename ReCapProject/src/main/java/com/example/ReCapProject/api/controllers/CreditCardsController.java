@@ -16,7 +16,7 @@ import com.example.ReCapProject.business.abstracts.CreditCardService;
 import com.example.ReCapProject.core.utilities.results.DataResult;
 import com.example.ReCapProject.core.utilities.results.Result;
 import com.example.ReCapProject.entities.concretes.CreditCard;
-import com.example.ReCapProject.entities.dtos.CreditCardDto;
+import com.example.ReCapProject.entities.dtos.CreditCardDetailDto;
 import com.example.ReCapProject.entities.requests.creditCard.CreateCreditCardRequest;
 import com.example.ReCapProject.entities.requests.creditCard.DeleteCreditCardRequest;
 import com.example.ReCapProject.entities.requests.creditCard.UpdateCreditCardRequest;
@@ -54,7 +54,7 @@ public class CreditCardsController {
 	}
 	
 	@GetMapping("/getcreditcarddetails")
-	public DataResult<List<CreditCardDto>> getCreditCardDetails(int userId) {
+	public DataResult<List<CreditCardDetailDto>> getCreditCardDetails(int userId) {
 		return this.creditCardService.getCreditCardDetails(userId);
 	}
 	

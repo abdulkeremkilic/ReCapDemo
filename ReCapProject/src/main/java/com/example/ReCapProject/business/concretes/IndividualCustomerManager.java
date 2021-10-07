@@ -17,7 +17,7 @@ import com.example.ReCapProject.core.utilities.results.SuccessDataResult;
 import com.example.ReCapProject.core.utilities.results.SuccessResult;
 import com.example.ReCapProject.dataAccess.abstracts.IndividualCustomerDao;
 import com.example.ReCapProject.entities.concretes.IndividualCustomer;
-import com.example.ReCapProject.entities.dtos.IndividualCustomerDto;
+import com.example.ReCapProject.entities.dtos.IndividualCustomerDetailDto;
 import com.example.ReCapProject.entities.requests.individualCustomer.CreateIndividualCustomerRequest;
 import com.example.ReCapProject.entities.requests.individualCustomer.DeleteIndividualCustomerRequest;
 import com.example.ReCapProject.entities.requests.individualCustomer.UpdateIndividualCustomerRequest;
@@ -62,7 +62,7 @@ public class IndividualCustomerManager implements IndividualCustomerService{
 	@Override
 	public Result update(UpdateIndividualCustomerRequest entity) {
 		
-		var result = BusinessRules.run(checkIfEmailExists(entity.getEmail()), checkIfNationalIdNumberExists(entity.getNationalId()));
+		var result = BusinessRules.run(checkIfEmailExists(entity.getEmail()));
 		
 		if(result != null)
 			return result;
@@ -99,23 +99,23 @@ public class IndividualCustomerManager implements IndividualCustomerService{
 	
 
 	@Override
-	public DataResult<IndividualCustomerDto> getDetailsById(int userId) {
+	public DataResult<IndividualCustomerDetailDto> getDetailsById(int userId) {
 
 		IndividualCustomer individualCustomer = this.individualCustomerDao.getById(userId);
 		
-		return new SuccessDataResult<IndividualCustomerDto>(modelMapper.map(individualCustomer, IndividualCustomerDto.class), Messages.CUSTOMER_LISTED);
+		return new SuccessDataResult<IndividualCustomerDetailDto>(modelMapper.map(individualCustomer, IndividualCustomerDetailDto.class), Messages.CUSTOMER_LISTED);
 	}
 	
 
 	@Override
-	public DataResult<List<IndividualCustomerDto>> getIndividualCustomersDetail() {
+	public DataResult<List<IndividualCustomerDetailDto>> getIndividualCustomersDetail() {
 		
 		List<IndividualCustomer> individualCustomers = this.individualCustomerDao.findAll();
 		
-		List<IndividualCustomerDto> individualCustomerDtos = individualCustomers.stream().map(individualCustomer -> 
-		modelMapper.map(individualCustomer, IndividualCustomerDto.class)).collect(Collectors.toList());
+		List<IndividualCustomerDetailDto> individualCustomerDtos = individualCustomers.stream().map(individualCustomer -> 
+		modelMapper.map(individualCustomer, IndividualCustomerDetailDto.class)).collect(Collectors.toList());
 		
-		return new SuccessDataResult<List<IndividualCustomerDto>>(individualCustomerDtos, Messages.CUSTOMERS_LISTED);
+		return new SuccessDataResult<List<IndividualCustomerDetailDto>>(individualCustomerDtos, Messages.CUSTOMERS_LISTED);
 		
 	}
 	

@@ -42,6 +42,11 @@ public class PaymentManager implements PaymentService {
 	@Override
 	public Result add(CreatePaymentRequest entity) {
 		
+		var result = BusinessRules.run(checkIfAlreadyBeenPayed(entity.getRentalId()));
+		
+		if(result != null)
+			return result;
+		
 		CreateCreditCardRequest creditCard = new CreateCreditCardRequest();
 		creditCard.setCardBeholderName(entity.getCardBeholderName().toLowerCase().trim());
 		creditCard.setCardNumber(entity.getCardNumber());
@@ -65,13 +70,13 @@ public class PaymentManager implements PaymentService {
 			return new ErrorResult(Messages.ERROR_MESSAGE);
 		}
 		
-		
 		Rental rental = this.rentalService.getById(entity.getRentalId()).getData();
 		rental.setPayed(true);
 		rental.setReturned(false);
 		
 		Car car = this.rentalService.getById(entity.getRentalId()).getData().getCar();
 		car.setAvailable(false);
+		
 		this.carDao.save(car);
 		
 		return new SuccessResult(Messages.PAYMENT_SUCCESSFUL);	
@@ -85,7 +90,7 @@ public class PaymentManager implements PaymentService {
 		
 		CreditCard creditCard = this.creditCardService.getById(entity.getCreditCardId()).getData();
 		
-		var result = BusinessRules.run(checkUserForCreditCard(rental, creditCard));
+		var result = BusinessRules.run(checkUserForCreditCard(rental, creditCard), checkIfAlreadyBeenPayed(entity.getRentalId()));
 		
 		if(result != null)
 			return result;
@@ -111,9 +116,20 @@ public class PaymentManager implements PaymentService {
 
 	
 	private Result checkUserForCreditCard(Rental rental, CreditCard creditCard) {
+		
 		if(!rental.getUser().equals(creditCard.getUser()))
 			return new ErrorResult(Messages.CREDIT_CARD_IS_INVALID);
 		
 		return new SuccessResult();
 	}
+	
+	
+	private Result checkIfAlreadyBeenPayed(int rentalId) {
+		
+		if(this.rentalService.getById(rentalId).getData().isPayed())
+			return new ErrorResult(Messages.PAYMENT_IS_ALREADY_BEEN_MADE);
+		
+		return new SuccessResult();
+	}
+	
 }

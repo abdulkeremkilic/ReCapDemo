@@ -17,7 +17,7 @@ import com.example.ReCapProject.core.utilities.results.SuccessDataResult;
 import com.example.ReCapProject.core.utilities.results.SuccessResult;
 import com.example.ReCapProject.dataAccess.abstracts.BrandDao;
 import com.example.ReCapProject.entities.concretes.Brand;
-import com.example.ReCapProject.entities.dtos.BrandDto;
+import com.example.ReCapProject.entities.dtos.BrandDetailDto;
 import com.example.ReCapProject.entities.requests.brand.CreateBrandRequest;
 import com.example.ReCapProject.entities.requests.brand.DeleteBrandRequest;
 import com.example.ReCapProject.entities.requests.brand.UpdateBrandRequest;
@@ -95,21 +95,21 @@ public class BrandManager implements BrandService {
 
 	
 	@Override
-	public DataResult<List<BrandDto>> getAllBrandDetails() {
+	public DataResult<List<BrandDetailDto>> getAllBrandDetails() {
 		
 		List<Brand> brands = this.brandDao.findAll();
 		
-		List<BrandDto> brandDtos = brands.stream()
+		List<BrandDetailDto> brandDtos = brands.stream()
 				.map(this::convertToDto)
 				.collect(Collectors.toList());
 		
-		return new SuccessDataResult<List<BrandDto>>(brandDtos, Messages.BRANDS_LISTED);
+		return new SuccessDataResult<List<BrandDetailDto>>(brandDtos, Messages.BRANDS_LISTED);
 	}
 	
 	
-	private BrandDto convertToDto (Brand brand) {
+	private BrandDetailDto convertToDto (Brand brand) {
 		
-		BrandDto brandDto = modelMapper.map(brand, BrandDto.class);
+		BrandDetailDto brandDto = modelMapper.map(brand, BrandDetailDto.class);
 		
 		return brandDto;
 	}

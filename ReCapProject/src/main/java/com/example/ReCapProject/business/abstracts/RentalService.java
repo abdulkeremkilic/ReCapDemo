@@ -5,7 +5,7 @@ import java.util.List;
 import com.example.ReCapProject.core.utilities.results.DataResult;
 import com.example.ReCapProject.core.utilities.results.Result;
 import com.example.ReCapProject.entities.concretes.Rental;
-import com.example.ReCapProject.entities.dtos.RentalDto;
+import com.example.ReCapProject.entities.dtos.RentalDetailDto;
 import com.example.ReCapProject.entities.requests.rental.CreateRentalRequest;
 import com.example.ReCapProject.entities.requests.rental.DeleteRentalRequest;
 import com.example.ReCapProject.entities.requests.rental.UpdateRentalRequest;
@@ -22,9 +22,9 @@ public interface RentalService {
 	
 	DataResult<List<Rental>> getAll();
 	
-	DataResult<List<RentalDto>> getOpenRentals();
-	DataResult<List<RentalDto>> getClosedRentals();
-	DataResult<List<RentalDto>> getRentalDetails();
-	DataResult<RentalDto> getRentalDetailById(int rentalId);
+	DataResult<List<RentalDetailDto>> getOpenRentals();
+	DataResult<List<RentalDetailDto>> getClosedRentals();
+	DataResult<List<RentalDetailDto>> getRentalDetails();
+	DataResult<RentalDetailDto> getRentalDetailById(int rentalId);
 	
 }

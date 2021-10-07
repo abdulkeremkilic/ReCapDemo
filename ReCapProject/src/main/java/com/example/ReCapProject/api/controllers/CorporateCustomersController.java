@@ -16,7 +16,7 @@ import com.example.ReCapProject.business.abstracts.CorporateCustomerService;
 import com.example.ReCapProject.core.utilities.results.DataResult;
 import com.example.ReCapProject.core.utilities.results.Result;
 import com.example.ReCapProject.entities.concretes.CorporateCustomer;
-import com.example.ReCapProject.entities.dtos.CorporateCustomerDto;
+import com.example.ReCapProject.entities.dtos.CorporateCustomerDetailDto;
 import com.example.ReCapProject.entities.requests.corporateCustomer.CreateCorporateCustomerRequest;
 import com.example.ReCapProject.entities.requests.corporateCustomer.DeleteCorporateCustomerRequest;
 import com.example.ReCapProject.entities.requests.corporateCustomer.UpdateCorporateCustomerRequest;
@@ -59,13 +59,13 @@ public class CorporateCustomersController {
 	
 	
 	@GetMapping("getdetails")
-	public DataResult<List<CorporateCustomerDto>> getCorporateCustomersDetail() {
+	public DataResult<List<CorporateCustomerDetailDto>> getCorporateCustomersDetail() {
 		return this.corporateCustomerService.getAllCorporateCustomerDetails();
 	}
 	
 	
 	@GetMapping("getbyid")
-	public DataResult<CorporateCustomerDto> getCorporateCustomerById(int userId) {
+	public DataResult<CorporateCustomerDetailDto> getCorporateCustomerById(int userId) {
 		return this.corporateCustomerService.getDetailsById(userId);
 	}
 

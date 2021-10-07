@@ -25,7 +25,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "credit_cards")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "receipts"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class CreditCard {
 
 	@Id

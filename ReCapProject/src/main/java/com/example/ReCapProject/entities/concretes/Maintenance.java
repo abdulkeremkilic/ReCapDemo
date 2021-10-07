@@ -1,6 +1,6 @@
 package com.example.ReCapProject.entities.concretes;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -33,7 +33,7 @@ public class Maintenance {
 	private boolean inMaintenance = false;
 	
 	@Column(name = "maintenance_date")
-	private Date maintenanceDate;
+	private LocalDate maintenanceDate;
 	
 	@ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
 	@JoinColumn(name = "car_id")

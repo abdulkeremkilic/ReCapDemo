@@ -21,7 +21,7 @@ import com.example.ReCapProject.core.utilities.results.SuccessResult;
 import com.example.ReCapProject.dataAccess.abstracts.CreditCardDao;
 import com.example.ReCapProject.entities.abstracts.ApplicationUser;
 import com.example.ReCapProject.entities.concretes.CreditCard;
-import com.example.ReCapProject.entities.dtos.CreditCardDto;
+import com.example.ReCapProject.entities.dtos.CreditCardDetailDto;
 import com.example.ReCapProject.entities.requests.creditCard.CreateCreditCardRequest;
 import com.example.ReCapProject.entities.requests.creditCard.DeleteCreditCardRequest;
 import com.example.ReCapProject.entities.requests.creditCard.UpdateCreditCardRequest;
@@ -63,9 +63,9 @@ public class CreditCardManager implements CreditCardService {
 		creditCard.setCardBeholderName(entity.getCardBeholderName().toLowerCase().trim());
 		
 		if(entity.isSaveCard()) {
-//			if(checkIfCardAlreadyExists(entity.getCardNumber(), creditCard).isSuccess()) {
-//				return new SuccessResult(Messages.CREDIT_CARD_ALREADY_BEEN_SAVED);
-//			}
+			if(checkIfCardAlreadyExists(entity.getCardNumber(), creditCard).isSuccess()) {
+				return new SuccessResult(Messages.CREDIT_CARD_ALREADY_BEEN_SAVED);
+			}
 			this.creditCardDao.save(creditCard);
 		}
 		
@@ -120,15 +120,15 @@ public class CreditCardManager implements CreditCardService {
 		
 		
 	@Override
-	public DataResult<List<CreditCardDto>> getCreditCardDetails(int userId) {
+	public DataResult<List<CreditCardDetailDto>> getCreditCardDetails(int userId) {
 		
 		List<CreditCard> creditCards = this.creditCardDao.getByUser_UserId(userId);
 		
-		List<CreditCardDto> creditCardDtos = new ArrayList<CreditCardDto>();
+		List<CreditCardDetailDto> creditCardDtos = new ArrayList<CreditCardDetailDto>();
 		
 		for (CreditCard creditCard : creditCards) {
 			
-			CreditCardDto creditCardDto = new CreditCardDto();
+			CreditCardDetailDto creditCardDto = new CreditCardDetailDto();
 			creditCardDto.setUserId(creditCard.getUser().getUserId());
 			creditCardDto.setCardBeholderName(creditCard.getCardBeholderName());
 			creditCardDto.setCreditCardNumber(creditCard.getCreditCardNumber());
@@ -138,7 +138,7 @@ public class CreditCardManager implements CreditCardService {
 			creditCardDtos.add(creditCardDto);
 		}
 		
-		return new SuccessDataResult<List<CreditCardDto>>(creditCardDtos, Messages.CREDIT_CARD_LISTED);
+		return new SuccessDataResult<List<CreditCardDetailDto>>(creditCardDtos, Messages.CREDIT_CARD_LISTED);
 	}	
 	
 	
@@ -190,13 +190,13 @@ public class CreditCardManager implements CreditCardService {
 	}
 	
 	
-//	private Result checkIfCardAlreadyExists(String creditCardNumber, CreditCard creditCard) {
-//		
-//		if(this.creditCardDao.getByCreditCardNumber(creditCardNumber).getUser() != null 
-//				&& this.creditCardDao.getByCreditCardNumber(creditCardNumber).getUser() == creditCard.getUser()) {
-//			return new SuccessResult();
-//		}
-//		return new ErrorResult();
-//	}
+	private Result checkIfCardAlreadyExists(String creditCardNumber, CreditCard creditCard) {
+		
+		if(this.creditCardDao.getByCreditCardNumber(creditCardNumber) != null 
+				&& this.creditCardDao.getByCreditCardNumber(creditCardNumber).getUser() == creditCard.getUser()) {
+			return new SuccessResult();
+		}
+		return new ErrorResult();
+	}
 
 }

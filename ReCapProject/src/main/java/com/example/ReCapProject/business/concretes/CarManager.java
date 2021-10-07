@@ -1,13 +1,14 @@
 package com.example.ReCapProject.business.concretes;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.ReCapProject.business.abstracts.BrandService;
+import com.example.ReCapProject.business.abstracts.CarImageService;
 import com.example.ReCapProject.business.abstracts.CarService;
 import com.example.ReCapProject.business.abstracts.CityService;
 import com.example.ReCapProject.business.abstracts.ColorService;
@@ -24,7 +25,7 @@ import com.example.ReCapProject.entities.concretes.Car;
 import com.example.ReCapProject.entities.concretes.CarImage;
 import com.example.ReCapProject.entities.concretes.City;
 import com.example.ReCapProject.entities.concretes.Color;
-import com.example.ReCapProject.entities.dtos.CarDto;
+import com.example.ReCapProject.entities.dtos.CarDetailDto;
 import com.example.ReCapProject.entities.requests.car.CreateCarRequest;
 import com.example.ReCapProject.entities.requests.car.DeleteCarRequest;
 import com.example.ReCapProject.entities.requests.car.UpdateCarRequest;
@@ -38,11 +39,13 @@ public class CarManager implements CarService {
 	private CityService cityService;
 	private ColorService colorService;
 	private BrandService brandService;
+	private CarImageService carImageService;
 	
 	private ModelMapper modelMapper;
 	
 	@Autowired
-	public CarManager(CarDao carDao, CarImageDao carImageDao, CityService cityService, BrandService brandService, ColorService colorService, ModelMapper modelMapper) {
+	public CarManager(CarDao carDao, CarImageDao carImageDao, CityService cityService, BrandService brandService, 
+			ColorService colorService, CarImageService carImageService, ModelMapper modelMapper) {
 		
 		this.carDao = carDao;
 		this.carImageDao = carImageDao;
@@ -50,6 +53,7 @@ public class CarManager implements CarService {
 		this.cityService = cityService;
 		this.brandService = brandService;
 		this.colorService = colorService;
+		this.carImageService = carImageService;
 		
 		this.modelMapper = modelMapper;
 	}
@@ -122,43 +126,53 @@ public class CarManager implements CarService {
 	}
 	
 	
-
 	@Override
-	public DataResult<List<CarDto>> getCarsDetail() {
+	public DataResult<List<CarDetailDto>> getCarsDetail() {
 		
 		List<Car> cars = this.carDao.findAll();
 		
-		List<CarDto> carDtos = cars.stream()
-				.map(this::convertToDto)
-				.collect(Collectors.toList());
+		List<CarDetailDto> carDtos = new ArrayList<CarDetailDto>();
 		
-		return new SuccessDataResult<List<CarDto>>(carDtos, Messages.CAR_DETAILS_LISTED);
+		for(Car car : cars) {
+			
+			CarDetailDto carDto = this.convertToDto(car);
+			carDto.setCarrImageDtos(this.carImageService.getImageDetailsByCarId(car.getCarId()).getData());
+			
+			carDtos.add(carDto);
+		}
+		
+		return new SuccessDataResult<List<CarDetailDto>>(carDtos, Messages.CAR_DETAILS_LISTED);
 	}
 	
 	
 
 	@Override
 	public DataResult<List<Car>> getCarByBrandName(String brandName) {
+		
 		return new SuccessDataResult<List<Car>>(this.carDao.getByBrand_BrandName(brandName), Messages.CARS_LISTED);
 	}
 	
 	
-
 	@Override
 	public DataResult<List<Car>> getCarByColorName(String colorName) {
+		
 		return new SuccessDataResult<List<Car>>(this.carDao.getByColor_ColorName(colorName), Messages.CARS_LISTED);
 	}
 	
 
 	@Override
 	public DataResult<List<Car>> getByCityName(String cityName) {
-		return new SuccessDataResult<List<Car>>(this.carDao.getByCity(cityName), Messages.CARS_LISTED);
+		
+		return new SuccessDataResult<List<Car>>(this.carDao.getByCity_CityName(cityName), Messages.CARS_LISTED);
 	}
 	
 	
-	private CarDto convertToDto (Car car) {
+
+	
+	
+	private CarDetailDto convertToDto (Car car) {
 		
-		CarDto carDto = modelMapper.map(car, CarDto.class);
+		CarDetailDto carDto = modelMapper.map(car, CarDetailDto.class);
 		return carDto;
 	}
 	

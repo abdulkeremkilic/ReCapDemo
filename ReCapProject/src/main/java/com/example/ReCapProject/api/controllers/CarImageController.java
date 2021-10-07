@@ -17,7 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.ReCapProject.business.abstracts.CarImageService;
 import com.example.ReCapProject.core.utilities.results.DataResult;
 import com.example.ReCapProject.core.utilities.results.Result;
-import com.example.ReCapProject.entities.dtos.CarImageDto;
+import com.example.ReCapProject.entities.dtos.CarImageDetailDto;
 import com.example.ReCapProject.entities.requests.carImage.CreateCarImageRequest;
 import com.example.ReCapProject.entities.requests.carImage.DeleteCarImageRequest;
 import com.example.ReCapProject.entities.requests.carImage.UpdateCarImageRequest;
@@ -54,7 +54,7 @@ public class CarImageController {
 	
 	
 	@GetMapping("/getcarimagedetails")
-	public DataResult<List<CarImageDto>> getCarImageDetailsByCarId(int carId) {
+	public DataResult<List<CarImageDetailDto>> getCarImageDetailsByCarId(int carId) {
 		return this.carImageService.getImageDetailsByCarId(carId);
 	}
 	

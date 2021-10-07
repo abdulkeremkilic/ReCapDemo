@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.ReCapProject.business.abstracts.CarImageService;
-import com.example.ReCapProject.business.abstracts.CarService;
 import com.example.ReCapProject.business.constants.Messages;
 import com.example.ReCapProject.business.constants.paths.Paths;
 import com.example.ReCapProject.core.utilities.business.BusinessRules;
@@ -23,10 +22,11 @@ import com.example.ReCapProject.core.utilities.results.ErrorResult;
 import com.example.ReCapProject.core.utilities.results.Result;
 import com.example.ReCapProject.core.utilities.results.SuccessDataResult;
 import com.example.ReCapProject.core.utilities.results.SuccessResult;
+import com.example.ReCapProject.dataAccess.abstracts.CarDao;
 import com.example.ReCapProject.dataAccess.abstracts.CarImageDao;
 import com.example.ReCapProject.entities.concretes.Car;
 import com.example.ReCapProject.entities.concretes.CarImage;
-import com.example.ReCapProject.entities.dtos.CarImageDto;
+import com.example.ReCapProject.entities.dtos.CarImageDetailDto;
 import com.example.ReCapProject.entities.requests.carImage.CreateCarImageRequest;
 import com.example.ReCapProject.entities.requests.carImage.DeleteCarImageRequest;
 import com.example.ReCapProject.entities.requests.carImage.UpdateCarImageRequest;
@@ -36,16 +36,16 @@ public class CarImageManager implements CarImageService {
 
 	private CarImageDao carImageDao;
 	
-	private CarService carService;
+	private CarDao carDao;
 	
 	private ModelMapper modelMapper;
 	
 	@Autowired
-	public CarImageManager(CarImageDao carImageDao, CarService carService, ModelMapper modelMapper) {
+	public CarImageManager(CarImageDao carImageDao, CarDao carDao, ModelMapper modelMapper) {
 		
 		this.carImageDao = carImageDao;
 		
-		this.carService = carService;
+		this.carDao = carDao;
 		
 		this.modelMapper = modelMapper;
 	}
@@ -69,7 +69,7 @@ public class CarImageManager implements CarImageService {
 		fos.write(file.getBytes());	// Literally copying the file (byte by byte) !
 		fos.close();
 		
-		Car car = this.carService.getById(entity.getCarId()).getData();
+		Car car = this.carDao.getById(entity.getCarId());
 		car.setCarId(entity.getCarId());
 		
 		CarImage carImage = new CarImage();
@@ -100,7 +100,7 @@ public class CarImageManager implements CarImageService {
 		fileOutpuStream.write(file.getBytes());
 		fileOutpuStream.close();
 		
-		Car car = this.carService.getById(entity.getCarId()).getData();
+		Car car = this.carDao.getById(entity.getCarId());
 		car.setCarId(entity.getCarId());
 		
 		CarImage carImage = this.carImageDao.getById(entity.getCarImageId());
@@ -127,15 +127,15 @@ public class CarImageManager implements CarImageService {
 	
 	
 	@Override
-	public DataResult<List<CarImageDto>> getImageDetailsByCarId(int carId) {
+	public DataResult<List<CarImageDetailDto>> getImageDetailsByCarId(int carId) {
 
 		List<CarImage> carImages = this.carImageDao.getByCar_CarId(carId);
 		
-		List<CarImageDto> carImageDtos = carImages.stream()
+		List<CarImageDetailDto> carImageDtos = carImages.stream()
 				.map(this::convertToDto)
 				.collect(Collectors.toList());
 		
-		return new SuccessDataResult<List<CarImageDto>>(carImageDtos);
+		return new SuccessDataResult<List<CarImageDetailDto>>(carImageDtos);
 	}
 	
 	
@@ -168,9 +168,9 @@ public class CarImageManager implements CarImageService {
 	}
 	
 	
-	private CarImageDto convertToDto(CarImage carImage) {
+	private CarImageDetailDto convertToDto(CarImage carImage) {
 		
-		CarImageDto carImageDto = modelMapper.map(carImage, CarImageDto.class);
+		CarImageDetailDto carImageDto = modelMapper.map(carImage, CarImageDetailDto.class);
 		return carImageDto;
 	}
 

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.ReCapProject.business.abstracts.InvoiceService;
 import com.example.ReCapProject.core.utilities.results.DataResult;
 import com.example.ReCapProject.entities.concretes.Invoice;
-import com.example.ReCapProject.entities.dtos.InvoiceDto;
+import com.example.ReCapProject.entities.dtos.InvoiceDetailDto;
 
 @RestController
 @RequestMapping("/api/invoices")
@@ -46,13 +46,13 @@ public class InvoicesController {
 	
 	
 	@GetMapping("/getalldetails")
-	public DataResult<List<InvoiceDto>> getAllDetails() {
+	public DataResult<List<InvoiceDetailDto>> getAllDetails() {
 		return this.invoiceService.getAllInvoiceDetails();
 	}
 	
 	
 	@GetMapping("/getbyid")
-	public DataResult<InvoiceDto> getById(int invoiceId) {
+	public DataResult<InvoiceDetailDto> getById(int invoiceId) {
 		return this.invoiceService.getInvoiceById(invoiceId);
 	}
 	

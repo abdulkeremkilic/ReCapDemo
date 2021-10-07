@@ -16,6 +16,7 @@ import com.example.ReCapProject.business.abstracts.AdditionalServiceService;
 import com.example.ReCapProject.core.utilities.results.DataResult;
 import com.example.ReCapProject.core.utilities.results.Result;
 import com.example.ReCapProject.entities.concretes.AdditionalService;
+import com.example.ReCapProject.entities.dtos.AdditionalServiceDetailDto;
 import com.example.ReCapProject.entities.requests.additionalService.CreateAdditionalServiceRequest;
 import com.example.ReCapProject.entities.requests.additionalService.DeleteAdditionalServiceRequest;
 import com.example.ReCapProject.entities.requests.additionalService.UpdateAdditionalServiceRequest;
@@ -54,6 +55,12 @@ public class AdditionalServicesController {
 	@GetMapping("/getall")
 	public DataResult<List<AdditionalService>> getAll() {
 		return this.additionalServiceService.getAll();
+	}
+	
+	
+	@GetMapping("/getalldetails")
+	public DataResult<List<AdditionalServiceDetailDto>> getAllDetails() {
+		return this.additionalServiceService.getAllDetails();
 	}
 	
 }

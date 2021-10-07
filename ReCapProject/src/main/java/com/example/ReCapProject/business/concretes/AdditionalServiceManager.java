@@ -1,7 +1,9 @@
 package com.example.ReCapProject.business.concretes;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,7 @@ import com.example.ReCapProject.core.utilities.results.SuccessDataResult;
 import com.example.ReCapProject.core.utilities.results.SuccessResult;
 import com.example.ReCapProject.dataAccess.abstracts.AdditionalServiceDao;
 import com.example.ReCapProject.entities.concretes.AdditionalService;
+import com.example.ReCapProject.entities.dtos.AdditionalServiceDetailDto;
 import com.example.ReCapProject.entities.requests.additionalService.CreateAdditionalServiceRequest;
 import com.example.ReCapProject.entities.requests.additionalService.DeleteAdditionalServiceRequest;
 import com.example.ReCapProject.entities.requests.additionalService.UpdateAdditionalServiceRequest;
@@ -24,9 +27,14 @@ public class AdditionalServiceManager implements AdditionalServiceService {
 
 	private AdditionalServiceDao additionalServiceDao;
 	
+	private ModelMapper modelMapper;
+	
 	@Autowired
-	public AdditionalServiceManager(AdditionalServiceDao additionalServiceDao) {
+	public AdditionalServiceManager(AdditionalServiceDao additionalServiceDao, ModelMapper modelMapper) {
+		
 		this.additionalServiceDao = additionalServiceDao;
+		
+		this.modelMapper = modelMapper;
 	}
 
 	@Override
@@ -83,6 +91,20 @@ public class AdditionalServiceManager implements AdditionalServiceService {
 		return new SuccessDataResult<List<AdditionalService>>(this.additionalServiceDao.findAll(), Messages.ADDITIONAL_SERVICES_LISTED);
 	}
 	
+	
+
+	@Override
+	public DataResult<List<AdditionalServiceDetailDto>> getAllDetails() {
+
+		List<AdditionalService> additionalServices = this.additionalServiceDao.findAll();
+		
+		List<AdditionalServiceDetailDto> additionalServiceDtos = additionalServices.stream()
+				.map(this::convertToDto)
+				.collect(Collectors.toList());
+		
+		return new SuccessDataResult<List<AdditionalServiceDetailDto>>(additionalServiceDtos, Messages.ADDITIONAL_SERVICES_LISTED);
+	}
+	
 
 	@Override
 	public DataResult<List<AdditionalService>> getByRentalId(int rentalId) {
@@ -97,6 +119,13 @@ public class AdditionalServiceManager implements AdditionalServiceService {
 			return new ErrorResult(Messages.ADDITIONAL_SERVICE_ALREADY_EXISTS);
 		
 		return new SuccessResult();
+	}
+	
+	
+	public AdditionalServiceDetailDto convertToDto(AdditionalService additionalService) {
+		
+		AdditionalServiceDetailDto additionalServiceDto = modelMapper.map(additionalService, AdditionalServiceDetailDto.class);
+		return additionalServiceDto;
 	}
 
 }

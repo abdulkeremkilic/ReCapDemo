@@ -16,7 +16,7 @@ import com.example.ReCapProject.business.abstracts.RentalService;
 import com.example.ReCapProject.core.utilities.results.DataResult;
 import com.example.ReCapProject.core.utilities.results.Result;
 import com.example.ReCapProject.entities.concretes.Rental;
-import com.example.ReCapProject.entities.dtos.RentalDto;
+import com.example.ReCapProject.entities.dtos.RentalDetailDto;
 import com.example.ReCapProject.entities.requests.rental.CreateRentalRequest;
 import com.example.ReCapProject.entities.requests.rental.DeleteRentalRequest;
 import com.example.ReCapProject.entities.requests.rental.UpdateRentalRequest;
@@ -59,22 +59,22 @@ public class RentalsConroller {
 	}
 	
 	@GetMapping("/getalldetails")
-	public DataResult<List<RentalDto>> getAllDetails() {
+	public DataResult<List<RentalDetailDto>> getAllDetails() {
 		return this.rentalService.getRentalDetails();
 	}
 	
 	@GetMapping("/getdetailbyid")
-	public DataResult<RentalDto> getDetailById(int rentalId) {
+	public DataResult<RentalDetailDto> getDetailById(int rentalId) {
 		return this.rentalService.getRentalDetailById(rentalId);
 	}
 	
 	@GetMapping("/getopenrentals")
-	public DataResult<List<RentalDto>> getOpenRentals() {
+	public DataResult<List<RentalDetailDto>> getOpenRentals() {
 		return this.rentalService.getOpenRentals();
 	}
 	
 	@GetMapping("/getclosedrentals")
-	public DataResult<List<RentalDto>> getClosedRentals() {
+	public DataResult<List<RentalDetailDto>> getClosedRentals() {
 		return this.rentalService.getClosedRentals();
 	}
 	

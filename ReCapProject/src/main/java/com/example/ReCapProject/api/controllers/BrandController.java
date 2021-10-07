@@ -16,7 +16,7 @@ import com.example.ReCapProject.business.abstracts.BrandService;
 import com.example.ReCapProject.core.utilities.results.DataResult;
 import com.example.ReCapProject.core.utilities.results.Result;
 import com.example.ReCapProject.entities.concretes.Brand;
-import com.example.ReCapProject.entities.dtos.BrandDto;
+import com.example.ReCapProject.entities.dtos.BrandDetailDto;
 import com.example.ReCapProject.entities.requests.brand.CreateBrandRequest;
 import com.example.ReCapProject.entities.requests.brand.DeleteBrandRequest;
 import com.example.ReCapProject.entities.requests.brand.UpdateBrandRequest;
@@ -59,7 +59,7 @@ public class BrandController {
 	
 	
 	@GetMapping("/getalldetails")
-	public DataResult<List<BrandDto>> getAllDetails() {
+	public DataResult<List<BrandDetailDto>> getAllDetails() {
 		return this.brandService.getAllBrandDetails();
 	}
 	

@@ -16,7 +16,7 @@ import com.example.ReCapProject.business.abstracts.CarService;
 import com.example.ReCapProject.core.utilities.results.DataResult;
 import com.example.ReCapProject.core.utilities.results.Result;
 import com.example.ReCapProject.entities.concretes.Car;
-import com.example.ReCapProject.entities.dtos.CarDto;
+import com.example.ReCapProject.entities.dtos.CarDetailDto;
 import com.example.ReCapProject.entities.requests.car.CreateCarRequest;
 import com.example.ReCapProject.entities.requests.car.DeleteCarRequest;
 import com.example.ReCapProject.entities.requests.car.UpdateCarRequest;
@@ -54,7 +54,7 @@ public class CarsContoller {
 	}
 	
 	@GetMapping("/getalldetail")
-	public DataResult<List<CarDto>> getCarsDetail() {
+	public DataResult<List<CarDetailDto>> getCarsDetail() {
 		return this.carService.getCarsDetail();
 	}
 	

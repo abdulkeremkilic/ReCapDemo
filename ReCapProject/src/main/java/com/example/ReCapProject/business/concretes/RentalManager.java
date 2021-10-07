@@ -33,7 +33,8 @@ import com.example.ReCapProject.entities.concretes.AdditionalService;
 import com.example.ReCapProject.entities.concretes.Car;
 import com.example.ReCapProject.entities.concretes.City;
 import com.example.ReCapProject.entities.concretes.Rental;
-import com.example.ReCapProject.entities.dtos.RentalDto;
+import com.example.ReCapProject.entities.dtos.AdditionalServiceDetailDto;
+import com.example.ReCapProject.entities.dtos.RentalDetailDto;
 import com.example.ReCapProject.entities.requests.invoice.CreateInvoiceRequest;
 import com.example.ReCapProject.entities.requests.rental.CreateRentalRequest;
 import com.example.ReCapProject.entities.requests.rental.DeleteRentalRequest;
@@ -201,7 +202,8 @@ public class RentalManager implements RentalService {
 		car.setAvailable(entity.isReturned());
 		car.setCurrentKilometer(entity.getReturnKilometer());
 		car.setCity(this.cityService.getById(entity.getReturnCityId()).getData());
-		this.rentalDao.save(rental);
+		
+		this.rentalDao.saveAndFlush(rental);
 		
 		var result2 = BusinessRules.run(checkIfCarIsReturned(entity));	// When car is returned and the rental is payed; the Invoice is being created automatically.
 		
@@ -251,53 +253,64 @@ public class RentalManager implements RentalService {
 		return new SuccessDataResult<List<Rental>>(this.rentalDao.findAll(), Messages.RENTALS_LISTED);
 	}
 	
-
+//---------------- Bug'
 	@Override
-	public DataResult<RentalDto> getRentalDetailById(int rentalId) {
+	public DataResult<RentalDetailDto> getRentalDetailById(int rentalId) {
 		
 		Rental rental = this.rentalDao.getById(rentalId);
 		
-		RentalDto rentalDto = convertToDto(rental);
-		return new SuccessDataResult<RentalDto>(rentalDto);
+		RentalDetailDto rentalDto = modelMapper.map(rental, RentalDetailDto.class);
+		
+		List<AdditionalServiceDetailDto> additionalServiceDetailDtos = new ArrayList<AdditionalServiceDetailDto>();
+		
+		for(AdditionalService additionalService : rental.getAdditionalServices()) {
+			
+			AdditionalServiceDetailDto additionalServiceDetailDto = modelMapper.map(additionalService, AdditionalServiceDetailDto.class);
+			additionalServiceDetailDtos.add(additionalServiceDetailDto);
+		}
+		
+		rentalDto.setAdditionalServices(additionalServiceDetailDtos);
+		
+		return new SuccessDataResult<RentalDetailDto>(rentalDto);
 	}
 	
 	
 	@Override
-	public DataResult<List<RentalDto>> getRentalDetails() {
+	public DataResult<List<RentalDetailDto>> getRentalDetails() {
 		
 		List<Rental> rentals = this.rentalDao.findAll();
 		
-		List<RentalDto> rentalDtos = rentals.stream()
+		List<RentalDetailDto> rentalDtos = rentals.stream()
 				.map(this::convertToDto)
 				.collect(Collectors.toList());
 		
-		return new SuccessDataResult<List<RentalDto>>(rentalDtos, Messages.RENTALS_LISTED);
+		return new SuccessDataResult<List<RentalDetailDto>>(rentalDtos, Messages.RENTALS_LISTED);
 	}
 	
 	
 	@Override
-	public DataResult<List<RentalDto>> getOpenRentals() {
+	public DataResult<List<RentalDetailDto>> getOpenRentals() {
 	
 		List<Rental> rentals = this.rentalDao.getByIsPayedIsTrueAndIsReturnedIsFalse();
 		
-		List<RentalDto> rentalDtos = rentals.stream()
+		List<RentalDetailDto> rentalDtos = rentals.stream()
 				.map(this::convertToDto)
 				.collect(Collectors.toList());
 		
-		return new SuccessDataResult<List<RentalDto>>(rentalDtos, Messages.RENTALS_LISTED);
+		return new SuccessDataResult<List<RentalDetailDto>>(rentalDtos, Messages.RENTALS_LISTED);
 	}
 	
 	
 	@Override
-	public DataResult<List<RentalDto>> getClosedRentals() {
+	public DataResult<List<RentalDetailDto>> getClosedRentals() {
 
 		List<Rental> rentals = this.rentalDao.getByIsPayedIsTrueAndIsReturnedIsTrue();
 		
-		List<RentalDto> rentalDtos = rentals.stream()
+		List<RentalDetailDto> rentalDtos = rentals.stream()
 				.map(this::convertToDto)
 				.collect(Collectors.toList());
 		
-		return new SuccessDataResult<List<RentalDto>>(rentalDtos, Messages.RENTALS_LISTED);
+		return new SuccessDataResult<List<RentalDetailDto>>(rentalDtos, Messages.RENTALS_LISTED);
 	}
 	
 	
@@ -324,7 +337,7 @@ public class RentalManager implements RentalService {
 		if(this.rentalDao.getById(rentalId).isPayed()) 
 			return new SuccessResult();
 		
-		return new ErrorResult("Retal has not been payed!");
+		return new ErrorResult(Messages.RENTAL_IS_NOT_PAYED);
 	}
 	
 		
@@ -364,7 +377,7 @@ public class RentalManager implements RentalService {
 		
 		if(rentalDao.getById(entity.getRentalId()).getReturnDate() == null) {	
 			if(entity.getReturnDate() != null) {
-				System.out.println("Additional fee has been charged for Open-Rent and remaining cash has been sent to User.");
+				System.out.println(Messages.RENTAL_REMAINING_CASH_RETURNED);
 				return new SuccessResult();
 			}
 		}
@@ -409,7 +422,7 @@ public class RentalManager implements RentalService {
 		LocalDate today = LocalDate.parse(LocalDate.now().toString());
 		
 		if(rentDate1.isBefore(today) || returnDate1.isBefore(rentDate1))
-			return new ErrorResult("Invalid dates");
+			return new ErrorResult(Messages.INVALID_DATES);
 		
 		return new SuccessResult();
 	}
@@ -421,7 +434,7 @@ public class RentalManager implements RentalService {
 		LocalDate returnDate1 = LocalDate.parse(returnDate, dateFormat);
 		
 		if(returnDate1.isBefore(rentDate))
-			return new ErrorResult("Invalid Return Date");
+			return new ErrorResult(Messages.INVALID_RETURN_DATE);
 		
 		return new SuccessResult();
 	}
@@ -433,7 +446,7 @@ public class RentalManager implements RentalService {
 		LocalDate returnDate1 = LocalDate.parse(returnDate, dateFormat);
 		
 		if(this.rentalDao.getById(rentalId).getReturnDate() != null && returnDate1.isAfter(this.rentalDao.getById(rentalId).getReturnDate())) 
-			System.out.println("Car has been delayed: additional fee will be charged!");
+			System.out.println(Messages.CAR_HAS_BEEN_DELAYED);
 		
 		return new SuccessResult();
 	}
@@ -445,15 +458,15 @@ public class RentalManager implements RentalService {
 		LocalDate returnDate1 = LocalDate.parse(returnDate, dateFormat);
 		
 		if(this.rentalDao.getById(rentalId).getReturnDate() != null && returnDate1.isBefore(this.rentalDao.getById(rentalId).getReturnDate())) 
-			System.out.println("Car has been brought early: Remaining will be sent to your account!");
+			System.out.println(Messages.CAR_HAS_BEEN_BROUGHT_EARLY);
 		
 		return new SuccessResult();
 	}
 	
 	
-	private RentalDto convertToDto(Rental rental) {
+	private RentalDetailDto convertToDto(Rental rental) {
 		
-		RentalDto rentalDto = modelMapper.map(rental, RentalDto.class);
+		RentalDetailDto rentalDto = modelMapper.map(rental, RentalDetailDto.class);
 		return rentalDto;
 	}
 

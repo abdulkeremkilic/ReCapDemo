@@ -22,7 +22,7 @@ import com.example.ReCapProject.core.utilities.results.SuccessResult;
 import com.example.ReCapProject.dataAccess.abstracts.InvoiceDao;
 import com.example.ReCapProject.entities.concretes.Invoice;
 import com.example.ReCapProject.entities.concretes.Rental;
-import com.example.ReCapProject.entities.dtos.InvoiceDto;
+import com.example.ReCapProject.entities.dtos.InvoiceDetailDto;
 import com.example.ReCapProject.entities.requests.invoice.CreateInvoiceRequest;
 import com.example.ReCapProject.entities.requests.invoice.DeleteInvoiceRequest;
 
@@ -121,30 +121,30 @@ public class InvoiceManager implements InvoiceService {
 	
 	
 	@Override
-	public DataResult<InvoiceDto> getInvoiceById(int invoiceId) {
+	public DataResult<InvoiceDetailDto> getInvoiceById(int invoiceId) {
 		
 		Invoice invoice = this.invoiceDao.getById(invoiceId);
 		
-		return new SuccessDataResult<InvoiceDto>(modelMapper.map(invoice, InvoiceDto.class), Messages.INVOICE_LISTED);
+		return new SuccessDataResult<InvoiceDetailDto>(modelMapper.map(invoice, InvoiceDetailDto.class), Messages.INVOICE_LISTED);
 	}
 	
 
 	@Override
-	public DataResult<List<InvoiceDto>> getAllInvoiceDetails() {
+	public DataResult<List<InvoiceDetailDto>> getAllInvoiceDetails() {
 		
 		List<Invoice> invoices = this.invoiceDao.findAll();
 		
-		List<InvoiceDto> invoiceDtos = invoices.stream()
+		List<InvoiceDetailDto> invoiceDtos = invoices.stream()
 				.map(this::convertToDto)
 				.collect(Collectors.toList());
 		
-		return new SuccessDataResult<List<InvoiceDto>>(invoiceDtos, Messages.INVOICES_LISTED);
+		return new SuccessDataResult<List<InvoiceDetailDto>>(invoiceDtos, Messages.INVOICES_LISTED);
 	}
 	
 	
-	private InvoiceDto convertToDto (Invoice invoice) {
+	private InvoiceDetailDto convertToDto (Invoice invoice) {
 		
-		InvoiceDto invoiceDto = modelMapper.map(invoice, InvoiceDto.class);
+		InvoiceDetailDto invoiceDto = modelMapper.map(invoice, InvoiceDetailDto.class);
 		return invoiceDto;
 	}
 

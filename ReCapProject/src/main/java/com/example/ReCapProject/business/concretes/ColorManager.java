@@ -17,7 +17,7 @@ import com.example.ReCapProject.core.utilities.results.SuccessDataResult;
 import com.example.ReCapProject.core.utilities.results.SuccessResult;
 import com.example.ReCapProject.dataAccess.abstracts.ColorDao;
 import com.example.ReCapProject.entities.concretes.Color;
-import com.example.ReCapProject.entities.dtos.ColorDto;
+import com.example.ReCapProject.entities.dtos.ColorDetailDto;
 import com.example.ReCapProject.entities.requests.color.CreateColorRequest;
 import com.example.ReCapProject.entities.requests.color.DeleteColorRequest;
 import com.example.ReCapProject.entities.requests.color.UpdateColorRequest;
@@ -92,21 +92,21 @@ public class ColorManager implements ColorService {
 	
 	
 	@Override
-	public DataResult<List<ColorDto>> getAllColorDetails() {
+	public DataResult<List<ColorDetailDto>> getAllColorDetails() {
 		
 		List<Color> colors = this.colorDao.findAll();
 		
-		List<ColorDto> colorDtos = colors.stream()
+		List<ColorDetailDto> colorDtos = colors.stream()
 				.map(this::convertToDto)
 				.collect(Collectors.toList());
 		
-		return new SuccessDataResult<List<ColorDto>>(colorDtos, Messages.COLOURS_LISTED);
+		return new SuccessDataResult<List<ColorDetailDto>>(colorDtos, Messages.COLOURS_LISTED);
 	}
 	
 	
-	private ColorDto convertToDto(Color color) {
+	private ColorDetailDto convertToDto(Color color) {
 		
-		ColorDto colorDto = modelMapper.map(color, ColorDto.class);
+		ColorDetailDto colorDto = modelMapper.map(color, ColorDetailDto.class);
 		return colorDto;
 	}
 	

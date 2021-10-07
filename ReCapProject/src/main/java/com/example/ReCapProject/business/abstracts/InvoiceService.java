@@ -5,7 +5,7 @@ import java.util.List;
 import com.example.ReCapProject.core.utilities.results.DataResult;
 import com.example.ReCapProject.core.utilities.results.Result;
 import com.example.ReCapProject.entities.concretes.Invoice;
-import com.example.ReCapProject.entities.dtos.InvoiceDto;
+import com.example.ReCapProject.entities.dtos.InvoiceDetailDto;
 import com.example.ReCapProject.entities.requests.invoice.CreateInvoiceRequest;
 import com.example.ReCapProject.entities.requests.invoice.DeleteInvoiceRequest;
 
@@ -22,6 +22,6 @@ public interface InvoiceService {
 	DataResult<List<Invoice>> getByRental_ApplicationUser_UserId(int userId);
 	DataResult<List<Invoice>> getByCreationDateBetween(String minDate, String maxDate);
 	
-	DataResult<InvoiceDto> getInvoiceById(int invoiceId);
-	DataResult<List<InvoiceDto>> getAllInvoiceDetails();
+	DataResult<InvoiceDetailDto> getInvoiceById(int invoiceId);
+	DataResult<List<InvoiceDetailDto>> getAllInvoiceDetails();
 }

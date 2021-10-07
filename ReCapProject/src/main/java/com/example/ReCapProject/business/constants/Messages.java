@@ -11,13 +11,15 @@ public class Messages {
 	public static String CAR_LISTED = "Car has been listed!";
 	public static String CAR_DETAILS_LISTED = "Cars details have been listed!";
 	public static String CAR_IS_NOT_AVAILABLE = "Car is not available!";
-	public static String CAR_IS_NOT_RETURNED = "Rental updated: Car is not returned, can't create invoice!";
+	public static String CAR_IS_NOT_RETURNED = "Rental updated: car is not returned, rental is still open!";
 	public static String CAR_IS_NOT_IN_THE_CITY = "You can't pick up this car from indicated city!";
+	public static String CAR_HAS_BEEN_DELAYED = "Car has been delayed: additional fee will be charged!";
+	public static String CAR_HAS_BEEN_BROUGHT_EARLY = "Car return date updated to an earlier date: Remaining cash will be sent to your account!";
 	
 	
 	//Customers
 	public static String CUSTOMER_ADDED = "Customer has been added!";
-	public static String CUSTOMER_UPDATED = "Customer has been updaed!";
+	public static String CUSTOMER_UPDATED = "Customer has been updated!";
 	public static String CUSTOMER_DELETED = "Customer has been deleted!";
 	public static String CUSTOMER_LISTED = "Customer have been listed!";
 	public static String CUSTOMERS_LISTED = "Customers have been listed!";
@@ -36,6 +38,8 @@ public class Messages {
 	public static String RENTAL_LISTED = "Rental have been listed";
 	public static String RENTALS_LISTED = "Rentals have been listed";
 	public static String RENTAL_DETAILS_LISTED = "Rentals details have been listed!";
+	public static String RENTAL_IS_NOT_PAYED = "Retal has not been payed!";
+	public static String RENTAL_REMAINING_CASH_RETURNED = "Additional fee has been charged for Open-Rent and remaining cash has been sent to User.";
 	
 	
 	//Car Images
@@ -94,7 +98,7 @@ public class Messages {
 	public static String DAMAGE_RECORD_ADDED = "Damage Record has been added!";
 	public static String DAMAGE_RECORD_UPDATED = "Damage Record has been updated!";
 	public static String DAMAGE_RECORD_DELETED = "Damage Record has been deleted!";
-	public static String DAMAGE_RECORD_LISTED = "Damage Record has been listed!";
+	public static String DAMAGE_RECORD_LISTED = "Damage Records has been listed!";
 	
 	
 	//Cities
@@ -121,10 +125,16 @@ public class Messages {
 	
 	//Payments
 	public static String PAYMENT_SUCCESSFUL = "The payment has been made successfully!";
+	public static String PAYMENT_IS_ALREADY_BEEN_MADE = "The payment was already been made!";
 	
 	
 	//Logins
 	public static String SUCCESSFULLY_LOGGED_IN = "You have successfully logged in!";
 	public static String USER_INFO_INVALID = "User Email or Password is wrong!";
 	public static String USER_DOES_NOT_EXIST = "User does't exist!";
+	
+	
+	//Generals
+	public static String INVALID_DATES = "Invalid dates!";
+	public static String INVALID_RETURN_DATE = "Invalid Return Date";
 }

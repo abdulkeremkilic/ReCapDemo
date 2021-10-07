@@ -16,7 +16,7 @@ import com.example.ReCapProject.business.abstracts.ColorService;
 import com.example.ReCapProject.core.utilities.results.DataResult;
 import com.example.ReCapProject.core.utilities.results.Result;
 import com.example.ReCapProject.entities.concretes.Color;
-import com.example.ReCapProject.entities.dtos.ColorDto;
+import com.example.ReCapProject.entities.dtos.ColorDetailDto;
 import com.example.ReCapProject.entities.requests.color.CreateColorRequest;
 import com.example.ReCapProject.entities.requests.color.DeleteColorRequest;
 
@@ -51,7 +51,7 @@ public class ColorController {
 	}
 	
 	@GetMapping("/getalldetails")
-	public DataResult<List<ColorDto>> getAllDetails() {
+	public DataResult<List<ColorDetailDto>> getAllDetails() {
 		return this.colorService.getAllColorDetails();
 	}
 	

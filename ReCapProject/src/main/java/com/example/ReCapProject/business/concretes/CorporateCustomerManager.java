@@ -17,7 +17,7 @@ import com.example.ReCapProject.core.utilities.results.SuccessDataResult;
 import com.example.ReCapProject.core.utilities.results.SuccessResult;
 import com.example.ReCapProject.dataAccess.abstracts.CorporateCustomerDao;
 import com.example.ReCapProject.entities.concretes.CorporateCustomer;
-import com.example.ReCapProject.entities.dtos.CorporateCustomerDto;
+import com.example.ReCapProject.entities.dtos.CorporateCustomerDetailDto;
 import com.example.ReCapProject.entities.requests.corporateCustomer.CreateCorporateCustomerRequest;
 import com.example.ReCapProject.entities.requests.corporateCustomer.DeleteCorporateCustomerRequest;
 import com.example.ReCapProject.entities.requests.corporateCustomer.UpdateCorporateCustomerRequest;
@@ -99,24 +99,24 @@ public class CorporateCustomerManager implements CorporateCustomerService {
 	
 
 	@Override
-	public DataResult<CorporateCustomerDto> getDetailsById(int userId) {
+	public DataResult<CorporateCustomerDetailDto> getDetailsById(int userId) {
 		
 		CorporateCustomer corporateCustomer = this.corporateCustomerDao.getById(userId);
 		
-		return new SuccessDataResult<CorporateCustomerDto>(modelMapper.map(corporateCustomer, CorporateCustomerDto.class), Messages.CUSTOMER_LISTED);
+		return new SuccessDataResult<CorporateCustomerDetailDto>(modelMapper.map(corporateCustomer, CorporateCustomerDetailDto.class), Messages.CUSTOMER_LISTED);
 	}
 	
 	
 
 	@Override
-	public DataResult<List<CorporateCustomerDto>> getAllCorporateCustomerDetails() {
+	public DataResult<List<CorporateCustomerDetailDto>> getAllCorporateCustomerDetails() {
 		
 		List<CorporateCustomer> corporateCustomers = this.corporateCustomerDao.findAll();
 		
-		List<CorporateCustomerDto> corporateCustomerDtos = corporateCustomers.stream().map(corporateCustomer -> 
-		modelMapper.map(corporateCustomer, CorporateCustomerDto.class)).collect(Collectors.toList());
+		List<CorporateCustomerDetailDto> corporateCustomerDtos = corporateCustomers.stream().map(corporateCustomer -> 
+		modelMapper.map(corporateCustomer, CorporateCustomerDetailDto.class)).collect(Collectors.toList());
 		
-		return new SuccessDataResult<List<CorporateCustomerDto>>(corporateCustomerDtos, Messages.CUSTOMERS_LISTED); 
+		return new SuccessDataResult<List<CorporateCustomerDetailDto>>(corporateCustomerDtos, Messages.CUSTOMERS_LISTED); 
 	}
 
 		
