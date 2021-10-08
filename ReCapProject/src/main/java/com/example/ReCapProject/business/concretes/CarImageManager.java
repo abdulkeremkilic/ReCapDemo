@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.ReCapProject.business.abstracts.CarImageService;
-import com.example.ReCapProject.business.constants.Messages;
+import com.example.ReCapProject.business.constants.messages.Messages;
 import com.example.ReCapProject.business.constants.paths.Paths;
 import com.example.ReCapProject.core.utilities.business.BusinessRules;
 import com.example.ReCapProject.core.utilities.results.DataResult;

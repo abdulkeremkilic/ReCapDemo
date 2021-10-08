@@ -1,6 +1,6 @@
 package com.example.ReCapProject.core.services.outService;
 
-import com.example.ReCapProject.business.constants.Messages;
+import com.example.ReCapProject.business.constants.messages.Messages;
 import com.example.ReCapProject.core.utilities.results.DataResult;
 import com.example.ReCapProject.core.utilities.results.ErrorDataResult;
 import com.example.ReCapProject.core.utilities.results.SuccessDataResult;

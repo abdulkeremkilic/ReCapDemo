@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import com.example.ReCapProject.business.abstracts.CreditCardService;
 import com.example.ReCapProject.business.abstracts.PaymentService;
 import com.example.ReCapProject.business.abstracts.RentalService;
-import com.example.ReCapProject.business.constants.Messages;
+import com.example.ReCapProject.business.constants.messages.Messages;
 import com.example.ReCapProject.core.services.abstracts.PosService;
 import com.example.ReCapProject.core.utilities.business.BusinessRules;
 import com.example.ReCapProject.core.utilities.results.ErrorResult;

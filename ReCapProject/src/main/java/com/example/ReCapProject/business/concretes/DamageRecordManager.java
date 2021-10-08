@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.ReCapProject.business.abstracts.CarService;
 import com.example.ReCapProject.business.abstracts.DamageRecordService;
-import com.example.ReCapProject.business.constants.Messages;
+import com.example.ReCapProject.business.constants.messages.Messages;
 import com.example.ReCapProject.core.utilities.results.DataResult;
 import com.example.ReCapProject.core.utilities.results.Result;
 import com.example.ReCapProject.core.utilities.results.SuccessDataResult;

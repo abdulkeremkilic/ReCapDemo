@@ -12,7 +12,7 @@ import com.example.ReCapProject.business.abstracts.CarImageService;
 import com.example.ReCapProject.business.abstracts.CarService;
 import com.example.ReCapProject.business.abstracts.CityService;
 import com.example.ReCapProject.business.abstracts.ColorService;
-import com.example.ReCapProject.business.constants.Messages;
+import com.example.ReCapProject.business.constants.messages.Messages;
 import com.example.ReCapProject.business.constants.paths.Paths;
 import com.example.ReCapProject.core.utilities.results.DataResult;
 import com.example.ReCapProject.core.utilities.results.Result;

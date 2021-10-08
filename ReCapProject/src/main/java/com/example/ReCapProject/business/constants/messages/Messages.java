@@ -1,4 +1,4 @@
-package com.example.ReCapProject.business.constants;
+package com.example.ReCapProject.business.constants.messages;
 
 public class Messages {
 

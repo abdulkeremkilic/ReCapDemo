@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.ReCapProject.business.abstracts.ApplicationUserService;
 import com.example.ReCapProject.business.abstracts.LogInService;
-import com.example.ReCapProject.business.constants.Messages;
+import com.example.ReCapProject.business.constants.messages.Messages;
 import com.example.ReCapProject.core.utilities.business.BusinessRules;
 import com.example.ReCapProject.core.utilities.results.ErrorResult;
 import com.example.ReCapProject.core.utilities.results.Result;
