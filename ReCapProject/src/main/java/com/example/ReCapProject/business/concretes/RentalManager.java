@@ -253,7 +253,7 @@ public class RentalManager implements RentalService {
 		return new SuccessDataResult<List<Rental>>(this.rentalDao.findAll(), Messages.RENTALS_LISTED);
 	}
 	
-//---------------- Bug'
+	//---------------- Bug'
 	@Override
 	public DataResult<RentalDetailDto> getRentalDetailById(int rentalId) {
 		
