@@ -3,8 +3,8 @@ package com.example.ReCapProject.core.services.adapters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.ReCapProject.core.services.PosOutService;
 import com.example.ReCapProject.core.services.abstracts.PosService;
+import com.example.ReCapProject.core.services.outService.PosOutService;
 import com.example.ReCapProject.core.utilities.results.ErrorResult;
 import com.example.ReCapProject.core.utilities.results.Result;
 import com.example.ReCapProject.core.utilities.results.SuccessResult;

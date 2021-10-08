@@ -1,4 +1,4 @@
-package com.example.ReCapProject.core.services;
+package com.example.ReCapProject.core.services.outService;
 
 import com.example.ReCapProject.business.constants.Messages;
 import com.example.ReCapProject.core.utilities.results.DataResult;

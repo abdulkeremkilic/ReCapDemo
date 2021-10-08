@@ -20,5 +20,5 @@ public class RentalDetailDto implements Dto {
 	private int modelYear;
 	private double rentalPrice;
 	private boolean isPayed;	
-	private List<AdditionalServiceDetailDto> additionalServices;
+	private List<AdditionalServiceDetailDto> additionalServices;	// bug!
 }

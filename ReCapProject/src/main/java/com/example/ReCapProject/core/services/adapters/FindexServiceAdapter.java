@@ -3,8 +3,8 @@ package com.example.ReCapProject.core.services.adapters;
 import org.springframework.stereotype.Service;
 
 import com.example.ReCapProject.business.constants.Messages;
-import com.example.ReCapProject.core.services.FindexOutService;
 import com.example.ReCapProject.core.services.abstracts.FindexService;
+import com.example.ReCapProject.core.services.outService.FindexOutService;
 import com.example.ReCapProject.core.utilities.results.DataResult;
 import com.example.ReCapProject.core.utilities.results.ErrorResult;
 import com.example.ReCapProject.core.utilities.results.Result;

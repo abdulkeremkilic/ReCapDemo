@@ -1,4 +1,4 @@
-package com.example.ReCapProject.core.services;
+package com.example.ReCapProject.core.services.outService;
 
 // OutService(Bank)
 public class PosOutService {
