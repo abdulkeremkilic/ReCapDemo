@@ -42,14 +42,13 @@ public class ReCapProjectApplication {
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public ErrorDataResult<Object> handleValidationException(MethodArgumentNotValidException exception) {
 		
-		Map<String, String> validationErrors = new HashMap<String, String>();
+		Map<String, String> validationErrors = new HashMap<>();
 		
 		for (FieldError fieldError : exception.getBindingResult().getFieldErrors()) {
 			validationErrors.put(fieldError.getField(),	fieldError.getDefaultMessage());
 		}
 		
-		ErrorDataResult<Object> error = new ErrorDataResult<Object>(validationErrors, "Validation Errors");
-		return error;
+		return new ErrorDataResult<>(validationErrors, "Validation Errors");
 	}
 	
 	@Bean

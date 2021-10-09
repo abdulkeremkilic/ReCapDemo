@@ -73,7 +73,7 @@ public class DamageRecordManager implements DamageRecordService {
 	@Override
 	public DataResult<List<DamageRecord>> getDamageRecordsByCarId(int carId) {
 		
-		return new SuccessDataResult<List<DamageRecord>>(this.damageRecordDao.getByCar_CarId(carId), Messages.DAMAGE_RECORD_LISTED);
+		return new SuccessDataResult<>(this.damageRecordDao.getByCar_CarId(carId), Messages.DAMAGE_RECORD_LISTED);
 	}
 
 	@Override
@@ -85,7 +85,7 @@ public class DamageRecordManager implements DamageRecordService {
 				.map(this::convertToDto)
 				.collect(Collectors.toList());
 		
-		return new SuccessDataResult<List<DamageRecordDetailDto>>(damageRecordDtos, Messages.DAMAGE_RECORD_LISTED);
+		return new SuccessDataResult<>(damageRecordDtos, Messages.DAMAGE_RECORD_LISTED);
 	}
 
 	@Override
@@ -97,13 +97,12 @@ public class DamageRecordManager implements DamageRecordService {
 				.map(this::convertToDto)
 				.collect(Collectors.toList());
 		
-		return new SuccessDataResult<List<DamageRecordDetailDto>>(damageRecordDtos, Messages.DAMAGE_RECORD_LISTED);
+		return new SuccessDataResult<>(damageRecordDtos, Messages.DAMAGE_RECORD_LISTED);
 	}
 	
 	private DamageRecordDetailDto convertToDto(DamageRecord damageRecord) {
 		
-		DamageRecordDetailDto damageRecordDto = modelMapper.map(damageRecord, DamageRecordDetailDto.class);
-		return damageRecordDto;
+		return modelMapper.map(damageRecord, DamageRecordDetailDto.class);
 	}
 
 }

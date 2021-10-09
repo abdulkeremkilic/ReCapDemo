@@ -80,14 +80,14 @@ public class ColorManager implements ColorService {
 	@Override
 	public DataResult<Color> getById(int colorId) {
 		
-		return new SuccessDataResult<Color>(this.colorDao.getByColorId(colorId));
+		return new SuccessDataResult<>(this.colorDao.getByColorId(colorId));
 	}
 	
 
 	@Override
 	public DataResult<List<Color>> getAll() {
 		
-		return new SuccessDataResult<List<Color>>(this.colorDao.findAll(), Messages.COLOURS_LISTED);
+		return new SuccessDataResult<>(this.colorDao.findAll(), Messages.COLOURS_LISTED);
 	}
 	
 	
@@ -100,14 +100,7 @@ public class ColorManager implements ColorService {
 				.map(this::convertToDto)
 				.collect(Collectors.toList());
 		
-		return new SuccessDataResult<List<ColorDetailDto>>(colorDtos, Messages.COLOURS_LISTED);
-	}
-	
-	
-	private ColorDetailDto convertToDto(Color color) {
-		
-		ColorDetailDto colorDto = modelMapper.map(color, ColorDetailDto.class);
-		return colorDto;
+		return new SuccessDataResult<>(colorDtos, Messages.COLOURS_LISTED);
 	}
 	
 	
@@ -118,5 +111,11 @@ public class ColorManager implements ColorService {
 		
 		return new SuccessResult();
 	}
-
+	
+		
+	private ColorDetailDto convertToDto(Color color) {
+		
+		return modelMapper.map(color, ColorDetailDto.class);
+	}
+	
 }

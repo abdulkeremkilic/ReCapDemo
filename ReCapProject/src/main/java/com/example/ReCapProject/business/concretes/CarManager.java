@@ -116,13 +116,13 @@ public class CarManager implements CarService {
 	
 	@Override
 	public DataResult<Car> getById(int carId) {
-		return new SuccessDataResult<Car>(this.carDao.getById(carId), Messages.CAR_LISTED);
+		return new SuccessDataResult<>(this.carDao.getById(carId), Messages.CAR_LISTED);
 	}
 	
 
 	@Override
 	public DataResult<List<Car>> getAll() {
-		return new SuccessDataResult<List<Car>>(this.carDao.findAll(), Messages.CARS_LISTED);
+		return new SuccessDataResult<>(this.carDao.findAll(), Messages.CARS_LISTED);
 	}
 	
 	
@@ -131,7 +131,7 @@ public class CarManager implements CarService {
 		
 		List<Car> cars = this.carDao.findAll();
 		
-		List<CarDetailDto> carDtos = new ArrayList<CarDetailDto>();
+		List<CarDetailDto> carDtos = new ArrayList<>();
 		
 		for(Car car : cars) {
 			
@@ -141,7 +141,7 @@ public class CarManager implements CarService {
 			carDtos.add(carDto);
 		}
 		
-		return new SuccessDataResult<List<CarDetailDto>>(carDtos, Messages.CAR_DETAILS_LISTED);
+		return new SuccessDataResult<>(carDtos, Messages.CAR_DETAILS_LISTED);
 	}
 	
 	
@@ -149,21 +149,21 @@ public class CarManager implements CarService {
 	@Override
 	public DataResult<List<Car>> getCarByBrandName(String brandName) {
 		
-		return new SuccessDataResult<List<Car>>(this.carDao.getByBrand_BrandName(brandName), Messages.CARS_LISTED);
+		return new SuccessDataResult<>(this.carDao.getByBrand_BrandName(brandName), Messages.CARS_LISTED);
 	}
 	
 	
 	@Override
 	public DataResult<List<Car>> getCarByColorName(String colorName) {
 		
-		return new SuccessDataResult<List<Car>>(this.carDao.getByColor_ColorName(colorName), Messages.CARS_LISTED);
+		return new SuccessDataResult<>(this.carDao.getByColor_ColorName(colorName), Messages.CARS_LISTED);
 	}
 	
 
 	@Override
 	public DataResult<List<Car>> getByCityName(String cityName) {
 		
-		return new SuccessDataResult<List<Car>>(this.carDao.getByCity_CityName(cityName), Messages.CARS_LISTED);
+		return new SuccessDataResult<>(this.carDao.getByCity_CityName(cityName), Messages.CARS_LISTED);
 	}
 	
 	
@@ -172,8 +172,7 @@ public class CarManager implements CarService {
 	
 	private CarDetailDto convertToDto (Car car) {
 		
-		CarDetailDto carDto = modelMapper.map(car, CarDetailDto.class);
-		return carDto;
+		return modelMapper.map(car, CarDetailDto.class);
 	}
 	
 }

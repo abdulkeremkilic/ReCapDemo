@@ -93,13 +93,13 @@ public class InvoiceManager implements InvoiceService {
 
 	@Override
 	public DataResult<List<Invoice>> getAll() {
-		return new SuccessDataResult<List<Invoice>>(this.invoiceDao.findAll(), Messages.INVOICES_LISTED);
+		return new SuccessDataResult<>(this.invoiceDao.findAll(), Messages.INVOICES_LISTED);
 	}
 	
 
 	@Override
 	public DataResult<List<Invoice>> getByRental_ApplicationUser_UserId(int userId) {
-		return new SuccessDataResult<List<Invoice>>(this.invoiceDao.getByRental_User_UserId(userId), Messages.INVOICES_LISTED);
+		return new SuccessDataResult<>(this.invoiceDao.getByRental_User_UserId(userId), Messages.INVOICES_LISTED);
 	}
 	
 
@@ -110,13 +110,13 @@ public class InvoiceManager implements InvoiceService {
 		LocalDate minDate = LocalDate.parse(firstDate, dateFormat);
 		LocalDate maxDate = LocalDate.parse(lastDate, dateFormat);
 		
-		return new SuccessDataResult<List<Invoice>>(this.invoiceDao.getByCreationDateBetween(minDate, maxDate), Messages.INVOICES_LISTED);
+		return new SuccessDataResult<>(this.invoiceDao.getByCreationDateBetween(minDate, maxDate), Messages.INVOICES_LISTED);
 	}
 	
 
 	@Override
 	public DataResult<Invoice> getById(int invoiceId) {
-		return new SuccessDataResult<Invoice>(this.invoiceDao.getById(invoiceId), Messages.INVOICE_LISTED);
+		return new SuccessDataResult<>(this.invoiceDao.getById(invoiceId), Messages.INVOICE_LISTED);
 	}
 	
 	
@@ -125,7 +125,7 @@ public class InvoiceManager implements InvoiceService {
 		
 		Invoice invoice = this.invoiceDao.getById(invoiceId);
 		
-		return new SuccessDataResult<InvoiceDetailDto>(modelMapper.map(invoice, InvoiceDetailDto.class), Messages.INVOICE_LISTED);
+		return new SuccessDataResult<>(modelMapper.map(invoice, InvoiceDetailDto.class), Messages.INVOICE_LISTED);
 	}
 	
 
@@ -138,14 +138,7 @@ public class InvoiceManager implements InvoiceService {
 				.map(this::convertToDto)
 				.collect(Collectors.toList());
 		
-		return new SuccessDataResult<List<InvoiceDetailDto>>(invoiceDtos, Messages.INVOICES_LISTED);
-	}
-	
-	
-	private InvoiceDetailDto convertToDto (Invoice invoice) {
-		
-		InvoiceDetailDto invoiceDto = modelMapper.map(invoice, InvoiceDetailDto.class);
-		return invoiceDto;
+		return new SuccessDataResult<>(invoiceDtos, Messages.INVOICES_LISTED);
 	}
 
 	
@@ -156,6 +149,12 @@ public class InvoiceManager implements InvoiceService {
 			return new ErrorResult("This rental already closed!");
 		
 		return new SuccessResult();
+	}
+	
+	
+	private InvoiceDetailDto convertToDto (Invoice invoice) {
+		
+		return modelMapper.map(invoice, InvoiceDetailDto.class);
 	}
 	
 }

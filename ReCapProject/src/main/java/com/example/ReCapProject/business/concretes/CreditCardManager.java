@@ -105,7 +105,7 @@ public class CreditCardManager implements CreditCardService {
 	@Override
 	public DataResult<CreditCard> getById(int creditCardId) {
 		
-		return new SuccessDataResult<CreditCard>(this.creditCardDao.getById(creditCardId));
+		return new SuccessDataResult<>(this.creditCardDao.getById(creditCardId));
 	}
 	
 
@@ -113,9 +113,9 @@ public class CreditCardManager implements CreditCardService {
 	public DataResult<List<CreditCard>> getCreditCardsForUser(int userId) {
 		
 		if(!this.applicationUserService.getById(userId).getData().getCreditCards().isEmpty())
-			return new SuccessDataResult<List<CreditCard>>(this.applicationUserService.getById(userId).getData().getCreditCards(), Messages.CREDIT_CARD_LISTED);
+			return new SuccessDataResult<>(this.applicationUserService.getById(userId).getData().getCreditCards(), Messages.CREDIT_CARD_LISTED);
 		
-		return new ErrorDataResult<List<CreditCard>>();
+		return new ErrorDataResult<>();
 	}
 		
 		
@@ -124,7 +124,7 @@ public class CreditCardManager implements CreditCardService {
 		
 		List<CreditCard> creditCards = this.creditCardDao.getByUser_UserId(userId);
 		
-		List<CreditCardDetailDto> creditCardDtos = new ArrayList<CreditCardDetailDto>();
+		List<CreditCardDetailDto> creditCardDtos = new ArrayList<>();
 		
 		for (CreditCard creditCard : creditCards) {
 			
@@ -138,7 +138,7 @@ public class CreditCardManager implements CreditCardService {
 			creditCardDtos.add(creditCardDto);
 		}
 		
-		return new SuccessDataResult<List<CreditCardDetailDto>>(creditCardDtos, Messages.CREDIT_CARD_LISTED);
+		return new SuccessDataResult<>(creditCardDtos, Messages.CREDIT_CARD_LISTED);
 	}	
 	
 	

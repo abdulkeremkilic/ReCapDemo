@@ -41,6 +41,7 @@ public class IndividualCustomerManager implements IndividualCustomerService{
 	@Override
 	public Result add(CreateIndividualCustomerRequest entity) {
 		
+		//-------------- Bug!
 		var result = BusinessRules.run(checkIfEmailExists(entity.getEmail()), checkIfNationalIdNumberExists(entity.getNationalId()));
 		
 		if(result != null)
@@ -88,13 +89,13 @@ public class IndividualCustomerManager implements IndividualCustomerService{
 	
 	@Override
 	public DataResult<IndividualCustomer> getById(int userId) {
-		return new SuccessDataResult<IndividualCustomer>(this.individualCustomerDao.getById(userId), Messages.CUSTOMER_LISTED);
+		return new SuccessDataResult<>(this.individualCustomerDao.getById(userId), Messages.CUSTOMER_LISTED);
 	}
 	
 
 	@Override
 	public DataResult<List<IndividualCustomer>> getAll() {
-		return new SuccessDataResult<List<IndividualCustomer>>(this.individualCustomerDao.findAll(), Messages.CUSTOMERS_LISTED);
+		return new SuccessDataResult<>(this.individualCustomerDao.findAll(), Messages.CUSTOMERS_LISTED);
 	}
 	
 
@@ -103,7 +104,7 @@ public class IndividualCustomerManager implements IndividualCustomerService{
 
 		IndividualCustomer individualCustomer = this.individualCustomerDao.getById(userId);
 		
-		return new SuccessDataResult<IndividualCustomerDetailDto>(modelMapper.map(individualCustomer, IndividualCustomerDetailDto.class), Messages.CUSTOMER_LISTED);
+		return new SuccessDataResult<>(modelMapper.map(individualCustomer, IndividualCustomerDetailDto.class), Messages.CUSTOMER_LISTED);
 	}
 	
 
@@ -115,7 +116,7 @@ public class IndividualCustomerManager implements IndividualCustomerService{
 		List<IndividualCustomerDetailDto> individualCustomerDtos = individualCustomers.stream().map(individualCustomer -> 
 		modelMapper.map(individualCustomer, IndividualCustomerDetailDto.class)).collect(Collectors.toList());
 		
-		return new SuccessDataResult<List<IndividualCustomerDetailDto>>(individualCustomerDtos, Messages.CUSTOMERS_LISTED);
+		return new SuccessDataResult<>(individualCustomerDtos, Messages.CUSTOMERS_LISTED);
 		
 	}
 	

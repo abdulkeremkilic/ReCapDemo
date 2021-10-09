@@ -122,7 +122,7 @@ public class CarImageManager implements CarImageService {
 
 	@Override
 	public DataResult<List<CarImage>> getAll() {
-		return new SuccessDataResult<List<CarImage>>(this.carImageDao.findAll(), Messages.CAR_IMAGES_LISTED);
+		return new SuccessDataResult<>(this.carImageDao.findAll(), Messages.CAR_IMAGES_LISTED);
 	}
 	
 	
@@ -135,7 +135,7 @@ public class CarImageManager implements CarImageService {
 				.map(this::convertToDto)
 				.collect(Collectors.toList());
 		
-		return new SuccessDataResult<List<CarImageDetailDto>>(carImageDtos);
+		return new SuccessDataResult<>(carImageDtos);
 	}
 	
 	
@@ -170,8 +170,7 @@ public class CarImageManager implements CarImageService {
 	
 	private CarImageDetailDto convertToDto(CarImage carImage) {
 		
-		CarImageDetailDto carImageDto = modelMapper.map(carImage, CarImageDetailDto.class);
-		return carImageDto;
+		return modelMapper.map(carImage, CarImageDetailDto.class);
 	}
 
 }

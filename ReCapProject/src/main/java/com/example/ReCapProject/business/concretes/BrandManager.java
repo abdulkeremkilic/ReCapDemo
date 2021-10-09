@@ -83,14 +83,14 @@ public class BrandManager implements BrandService {
 	@Override
 	public DataResult<Brand> getById(int brandId) {
 
-		return new SuccessDataResult<Brand>(this.brandDao.getById(brandId));
+		return new SuccessDataResult<>(this.brandDao.getById(brandId));
 	}
 
 	
 
 	@Override
 	public DataResult<List<Brand>> getAll() {
-		return new SuccessDataResult<List<Brand>>(this.brandDao.findAll(), Messages.BRANDS_LISTED);
+		return new SuccessDataResult<>(this.brandDao.findAll(), Messages.BRANDS_LISTED);
 	}
 
 	
@@ -103,22 +103,21 @@ public class BrandManager implements BrandService {
 				.map(this::convertToDto)
 				.collect(Collectors.toList());
 		
-		return new SuccessDataResult<List<BrandDetailDto>>(brandDtos, Messages.BRANDS_LISTED);
-	}
+		return new SuccessDataResult<>(brandDtos, Messages.BRANDS_LISTED);
+	}	
 	
-	
-	private BrandDetailDto convertToDto (Brand brand) {
-		
-		BrandDetailDto brandDto = modelMapper.map(brand, BrandDetailDto.class);
-		
-		return brandDto;
-	}
 	
 	private Result checkIfBrandExists(String brandName, String modelName, int modelYear) {
 		if(this.brandDao.existsByBrandNameAndModelNameAndModelYear(brandName.toLowerCase().trim(), modelName.toLowerCase().trim(), modelYear))
 			return new ErrorResult(Messages.BRAND_ALREADY_EXISTS);
 		
 		return new SuccessResult();
+	}
+	
+	
+	private BrandDetailDto convertToDto (Brand brand) {
+		
+		return modelMapper.map(brand, BrandDetailDto.class);
 	}
 
 }

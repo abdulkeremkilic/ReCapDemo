@@ -60,6 +60,7 @@ public class CorporateCustomerManager implements CorporateCustomerService {
 	@Override
 	public Result update(UpdateCorporateCustomerRequest  entity) {
 	
+		//---------------- Bug!
 		var result = BusinessRules.run(checkIfEmailExists(entity.getEmail()), checkIfTaxNumberExists(entity.getTaxNumber()));
 		
 		if(result != null)
@@ -88,13 +89,13 @@ public class CorporateCustomerManager implements CorporateCustomerService {
 	@Override
 	public DataResult<CorporateCustomer> getById(int userId) {
 		
-		return new SuccessDataResult<CorporateCustomer>(this.corporateCustomerDao.getById(userId), Messages.CUSTOMER_LISTED);
+		return new SuccessDataResult<>(this.corporateCustomerDao.getById(userId), Messages.CUSTOMER_LISTED);
 	}
 	
 
 	@Override
 	public DataResult<List<CorporateCustomer>> getAll() {
-		return new SuccessDataResult<List<CorporateCustomer>>(this.corporateCustomerDao.findAll(), Messages.CUSTOMERS_LISTED);
+		return new SuccessDataResult<>(this.corporateCustomerDao.findAll(), Messages.CUSTOMERS_LISTED);
 	}
 	
 
@@ -103,9 +104,8 @@ public class CorporateCustomerManager implements CorporateCustomerService {
 		
 		CorporateCustomer corporateCustomer = this.corporateCustomerDao.getById(userId);
 		
-		return new SuccessDataResult<CorporateCustomerDetailDto>(modelMapper.map(corporateCustomer, CorporateCustomerDetailDto.class), Messages.CUSTOMER_LISTED);
+		return new SuccessDataResult<>(modelMapper.map(corporateCustomer, CorporateCustomerDetailDto.class), Messages.CUSTOMER_LISTED);
 	}
-	
 	
 
 	@Override
@@ -113,10 +113,11 @@ public class CorporateCustomerManager implements CorporateCustomerService {
 		
 		List<CorporateCustomer> corporateCustomers = this.corporateCustomerDao.findAll();
 		
-		List<CorporateCustomerDetailDto> corporateCustomerDtos = corporateCustomers.stream().map(corporateCustomer -> 
-		modelMapper.map(corporateCustomer, CorporateCustomerDetailDto.class)).collect(Collectors.toList());
+		List<CorporateCustomerDetailDto> corporateCustomerDtos = corporateCustomers.stream()
+				.map(corporateCustomer -> modelMapper.map(corporateCustomer, CorporateCustomerDetailDto.class))
+				.collect(Collectors.toList());
 		
-		return new SuccessDataResult<List<CorporateCustomerDetailDto>>(corporateCustomerDtos, Messages.CUSTOMERS_LISTED); 
+		return new SuccessDataResult<>(corporateCustomerDtos, Messages.CUSTOMERS_LISTED); 
 	}
 
 		

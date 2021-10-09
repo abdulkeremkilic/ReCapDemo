@@ -95,14 +95,14 @@ public class MaintenanceManager implements MaintenanceService {
 	@Override
 	public DataResult<List<Maintenance>> getByCarId(int carId) {
 		
-		return new SuccessDataResult<List<Maintenance>>(this.maintenanceDao.getByCar_CarId(carId), Messages.MAINTENANCES_LISTED);
+		return new SuccessDataResult<>(this.maintenanceDao.getByCar_CarId(carId), Messages.MAINTENANCES_LISTED);
 	}
 	
 
 	@Override
 	public DataResult<List<Maintenance>> getAll() {
 		
-		return new SuccessDataResult<List<Maintenance>> (this.maintenanceDao.findAll(), Messages.MAINTENANCES_LISTED);
+		return new SuccessDataResult<> (this.maintenanceDao.findAll(), Messages.MAINTENANCES_LISTED);
 	}
 	
 	
@@ -115,7 +115,7 @@ public class MaintenanceManager implements MaintenanceService {
 				.map(this::convertToDto)
 				.collect(Collectors.toList());
 		
-		return new SuccessDataResult<List<MaintenanceDetailDto>>(maintenanceDtos, Messages.MAINTENANCES_LISTED);
+		return new SuccessDataResult<>(maintenanceDtos, Messages.MAINTENANCES_LISTED);
 	}
 	
 	
@@ -129,8 +129,7 @@ public class MaintenanceManager implements MaintenanceService {
 	
 	private MaintenanceDetailDto convertToDto(Maintenance maintenance) {
 		
-		MaintenanceDetailDto maintenanceDto = modelMapper.map(maintenance, MaintenanceDetailDto.class);
-		return maintenanceDto;
+		return modelMapper.map(maintenance, MaintenanceDetailDto.class);
 	}
 
 }

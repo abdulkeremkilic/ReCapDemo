@@ -81,14 +81,14 @@ public class AdditionalServiceManager implements AdditionalServiceService {
 	
 	@Override
 	public DataResult<AdditionalService> getById(int additionalServiceId) {
-		return new SuccessDataResult<AdditionalService>(this.additionalServiceDao.getById(additionalServiceId));
+		return new SuccessDataResult<>(this.additionalServiceDao.getById(additionalServiceId));
 	}
 	
 
 	@Override
 	public DataResult<List<AdditionalService>> getAll() {
 		
-		return new SuccessDataResult<List<AdditionalService>>(this.additionalServiceDao.findAll(), Messages.ADDITIONAL_SERVICES_LISTED);
+		return new SuccessDataResult<>(this.additionalServiceDao.findAll(), Messages.ADDITIONAL_SERVICES_LISTED);
 	}
 	
 	
@@ -102,14 +102,14 @@ public class AdditionalServiceManager implements AdditionalServiceService {
 				.map(this::convertToDto)
 				.collect(Collectors.toList());
 		
-		return new SuccessDataResult<List<AdditionalServiceDetailDto>>(additionalServiceDtos, Messages.ADDITIONAL_SERVICES_LISTED);
+		return new SuccessDataResult<>(additionalServiceDtos, Messages.ADDITIONAL_SERVICES_LISTED);
 	}
 	
 
 	@Override
 	public DataResult<List<AdditionalService>> getByRentalId(int rentalId) {
 
-		return new SuccessDataResult<List<AdditionalService>>(this.additionalServiceDao.getByRental_RentalId(rentalId), Messages.ADDITIONAL_SERVICES_LISTED);
+		return new SuccessDataResult<>(this.additionalServiceDao.getByRental_RentalId(rentalId), Messages.ADDITIONAL_SERVICES_LISTED);
 	}
 
 
@@ -124,8 +124,7 @@ public class AdditionalServiceManager implements AdditionalServiceService {
 	
 	public AdditionalServiceDetailDto convertToDto(AdditionalService additionalService) {
 		
-		AdditionalServiceDetailDto additionalServiceDto = modelMapper.map(additionalService, AdditionalServiceDetailDto.class);
-		return additionalServiceDto;
+		return modelMapper.map(additionalService, AdditionalServiceDetailDto.class);
 	}
 
 }

@@ -105,7 +105,7 @@ public class RentalManager implements RentalService {
 		rental.setReturnDate(returnDate);
 		rental.setPickUpKilometer(car.getCurrentKilometer());
 		
-		List<AdditionalService> additionalServices = new ArrayList<AdditionalService>();
+		List<AdditionalService> additionalServices = new ArrayList<>();
 		
 		if(entity.getAdditionalServiceId() != null) {
 		for (Integer additionalServiceId : entity.getAdditionalServiceId()) {
@@ -148,7 +148,7 @@ public class RentalManager implements RentalService {
 		rental.setReturnDate(returnDate);
 		rental.setPickUpKilometer(car.getCurrentKilometer());	
 		
-		List<AdditionalService> additionalServices = new ArrayList<AdditionalService>();
+		List<AdditionalService> additionalServices = new ArrayList<>();
 		
 		if(entity.getAdditionalServiceId() != null) {
 		for (Integer additionalServiceId : entity.getAdditionalServiceId()) {
@@ -243,14 +243,14 @@ public class RentalManager implements RentalService {
 	@Override
 	public DataResult<Rental> getById(int rentalId) {
 		
-		return new SuccessDataResult<Rental>(this.rentalDao.getById(rentalId));
+		return new SuccessDataResult<>(this.rentalDao.getById(rentalId));
 	}
 	
 
 	@Override
 	public DataResult<List<Rental>> getAll() {
 		
-		return new SuccessDataResult<List<Rental>>(this.rentalDao.findAll(), Messages.RENTALS_LISTED);
+		return new SuccessDataResult<>(this.rentalDao.findAll(), Messages.RENTALS_LISTED);
 	}
 	
 	//---------------- Bug'
@@ -261,7 +261,7 @@ public class RentalManager implements RentalService {
 		
 		RentalDetailDto rentalDto = modelMapper.map(rental, RentalDetailDto.class);
 		
-		List<AdditionalServiceDetailDto> additionalServiceDetailDtos = new ArrayList<AdditionalServiceDetailDto>();
+		List<AdditionalServiceDetailDto> additionalServiceDetailDtos = new ArrayList<>();
 		
 		for(AdditionalService additionalService : rental.getAdditionalServices()) {
 			
@@ -271,7 +271,7 @@ public class RentalManager implements RentalService {
 		
 		rentalDto.setAdditionalServices(additionalServiceDetailDtos);
 		
-		return new SuccessDataResult<RentalDetailDto>(rentalDto);
+		return new SuccessDataResult<>(rentalDto);
 	}
 	
 	
@@ -284,7 +284,7 @@ public class RentalManager implements RentalService {
 				.map(this::convertToDto)
 				.collect(Collectors.toList());
 		
-		return new SuccessDataResult<List<RentalDetailDto>>(rentalDtos, Messages.RENTALS_LISTED);
+		return new SuccessDataResult<>(rentalDtos, Messages.RENTALS_LISTED);
 	}
 	
 	
@@ -297,7 +297,7 @@ public class RentalManager implements RentalService {
 				.map(this::convertToDto)
 				.collect(Collectors.toList());
 		
-		return new SuccessDataResult<List<RentalDetailDto>>(rentalDtos, Messages.RENTALS_LISTED);
+		return new SuccessDataResult<>(rentalDtos, Messages.RENTALS_LISTED);
 	}
 	
 	
@@ -310,66 +310,47 @@ public class RentalManager implements RentalService {
 				.map(this::convertToDto)
 				.collect(Collectors.toList());
 		
-		return new SuccessDataResult<List<RentalDetailDto>>(rentalDtos, Messages.RENTALS_LISTED);
-	}
-	
-	
-	private Result checkIfCarIsAvailable(int carId) {
-		
-		if(this.carService.getById(carId).getData().isAvailable()) 
-			return new SuccessResult();
-		
-		return new ErrorResult(Messages.CAR_IS_NOT_AVAILABLE);
-	}
-	
-	
-	private Result checkIfCarIsReturned(UpdateRentalRequest rental) {
-		
-		if(rental.isReturned()) 
-			return new SuccessResult();
-		
-		return new ErrorResult(Messages.CAR_IS_NOT_RETURNED);
-	}
-	
-	
-	private Result checkIfRentalIsPayed(int rentalId) {
-		
-		if(this.rentalDao.getById(rentalId).isPayed()) 
-			return new SuccessResult();
-		
-		return new ErrorResult(Messages.RENTAL_IS_NOT_PAYED);
+		return new SuccessDataResult<>(rentalDtos, Messages.RENTALS_LISTED);
 	}
 	
 		
-	private Result checkCarsPickUpCityIsAvailable(int carId, int pickUpCityId) {
-		
-		Car car = this.carService.getById(carId).getData();
-		if(car.getCity() != this.cityService.getById(pickUpCityId).getData())
-			return new ErrorResult(Messages.CAR_IS_NOT_IN_THE_CITY);
-		
-		return new SuccessResult();
-	}
-	
-	
-	private Result checkCarReturnCityIsAvailable(int returnCityId) {
-		
-		for(City city : this.cityService.getAll().getData()) {
-			if(city.getClass() != this.cityService.getById(returnCityId).getData().getClass()) {
-				return new ErrorResult(Messages.CITY_SERVICE_IS_NOT_AVAILABLE);
-			}
-		}
-		return new SuccessResult();
-	}
-	
-	
 	private DataResult<Double> calculateTotalPrice(int carId, List<AdditionalService> additionalServices, int returnCityId, LocalDate rentDate, LocalDate returnDate) {
 		
 		if(returnDate == null) {
 			double deposit = (this.carService.getById(carId).getData().getDailyPrice() * 90);
-			return new SuccessDataResult<Double>(deposit);
+			return new SuccessDataResult<>(deposit);
 		}
 		double totalPrice =(calculateRentalPrice(carId, additionalServices, rentDate, returnDate).getData() + calculateIfCarReturnedToDifferentCity(carId, returnCityId).getData());
-		return new SuccessDataResult<Double>(totalPrice);
+		return new SuccessDataResult<>(totalPrice);
+	}
+	
+	
+	private DataResult<Double> calculateIfCarReturnedToDifferentCity(int carId, int returnCityId) {
+		if(this.carService.getById(carId).getData().getCity() != this.cityService.getById(returnCityId).getData())
+			return new SuccessDataResult<>(500.0);
+		
+		return new SuccessDataResult<>(0.0);
+	}
+	
+	
+	private DataResult<Double> calculateRentalPrice(int carId, List<AdditionalService> additionalServices, LocalDate rentDate, LocalDate returnDate) {
+		
+		long days = ChronoUnit.DAYS.between(rentDate, returnDate);
+		
+		Car car = this.carService.getById(carId).getData();
+		
+		return new SuccessDataResult<>((car.getDailyPrice() * days) + (calculateTotalFeeForAdditionalServices(additionalServices).getData() * days));			
+	}
+	
+	
+	private DataResult<Double> calculateTotalFeeForAdditionalServices(List<AdditionalService> additionalServices) {
+		
+		double totalFee = 0;
+		
+		for (AdditionalService additionalService : additionalServices) 
+				totalFee += additionalService.getAdditionalServiceFee();			
+		
+		return new SuccessDataResult<>(totalFee);
 	}
 	
 	
@@ -382,35 +363,6 @@ public class RentalManager implements RentalService {
 			}
 		}
 		return null;
-	}
-	
-	
-	private DataResult<Double> calculateIfCarReturnedToDifferentCity(int carId, int returnCityId) {
-		if(this.carService.getById(carId).getData().getCity() != this.cityService.getById(returnCityId).getData())
-			return new SuccessDataResult<Double>(500.0);
-		
-		return new SuccessDataResult<Double>(0.0);
-	}
-	
-	
-	private DataResult<Double> calculateRentalPrice(int carId, List<AdditionalService> additionalServices, LocalDate rentDate, LocalDate returnDate) {
-		
-		long days = ChronoUnit.DAYS.between(rentDate, returnDate);
-		
-		Car car = this.carService.getById(carId).getData();
-		
-		return new SuccessDataResult<Double>((car.getDailyPrice() * days) + (calculateTotalFeeForAdditionalServices(additionalServices).getData() * days));			
-	}
-	
-	
-	private DataResult<Double> calculateTotalFeeForAdditionalServices(List<AdditionalService> additionalServices) {
-		
-		double totalFee = 0;
-		
-		for (AdditionalService additionalService : additionalServices) 
-				totalFee += additionalService.getAdditionalServiceFee();			
-		
-		return new SuccessDataResult<Double>(totalFee);
 	}
 	
 	
@@ -464,10 +416,57 @@ public class RentalManager implements RentalService {
 	}
 	
 	
+	private Result checkIfCarIsAvailable(int carId) {
+		
+		if(this.carService.getById(carId).getData().isAvailable()) 
+			return new SuccessResult();
+		
+		return new ErrorResult(Messages.CAR_IS_NOT_AVAILABLE);
+	}
+	
+	
+	private Result checkIfCarIsReturned(UpdateRentalRequest rental) {
+		
+		if(rental.isReturned()) 
+			return new SuccessResult();
+		
+		return new ErrorResult(Messages.CAR_IS_NOT_RETURNED);
+	}
+	
+	
+	private Result checkIfRentalIsPayed(int rentalId) {
+		
+		if(this.rentalDao.getById(rentalId).isPayed()) 
+			return new SuccessResult();
+		
+		return new ErrorResult(Messages.RENTAL_IS_NOT_PAYED);
+	}
+	
+		
+	private Result checkCarsPickUpCityIsAvailable(int carId, int pickUpCityId) {
+		
+		Car car = this.carService.getById(carId).getData();
+		if(car.getCity() != this.cityService.getById(pickUpCityId).getData())
+			return new ErrorResult(Messages.CAR_IS_NOT_IN_THE_CITY);
+		
+		return new SuccessResult();
+	}
+	
+	
+	private Result checkCarReturnCityIsAvailable(int returnCityId) {
+		
+		for(City city : this.cityService.getAll().getData()) {
+			if(city.getClass() != this.cityService.getById(returnCityId).getData().getClass()) {
+				return new ErrorResult(Messages.CITY_SERVICE_IS_NOT_AVAILABLE);
+			}
+		}
+		return new SuccessResult();
+	}
+	
+	
 	private RentalDetailDto convertToDto(Rental rental) {
 		
-		RentalDetailDto rentalDto = modelMapper.map(rental, RentalDetailDto.class);
-		return rentalDto;
+		return modelMapper.map(rental, RentalDetailDto.class);
 	}
 
 }

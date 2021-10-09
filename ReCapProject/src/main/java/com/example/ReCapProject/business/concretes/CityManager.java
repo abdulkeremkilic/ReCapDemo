@@ -80,14 +80,14 @@ public class CityManager implements CityService {
 	@Override
 	public DataResult<City> getById(int cityId) {
 		
-		return new SuccessDataResult<City>(this.cityDao.getById(cityId));
+		return new SuccessDataResult<>(this.cityDao.getById(cityId));
 	}
 	
 
 	@Override
 	public DataResult<List<City>> getAll() {
 		
-		return new SuccessDataResult<List<City>>(this.cityDao.findAll(), Messages.CITIES_LISTED);
+		return new SuccessDataResult<>(this.cityDao.findAll(), Messages.CITIES_LISTED);
 	}
 	
 	
@@ -100,7 +100,7 @@ public class CityManager implements CityService {
 				.map(this::convertToDto)
 				.collect(Collectors.toList());
 		
-		return new SuccessDataResult<List<CityDetailDto>>(cityDtos, Messages.CITIES_LISTED);
+		return new SuccessDataResult<>(cityDtos, Messages.CITIES_LISTED);
 	}
 	
 	
@@ -115,8 +115,7 @@ public class CityManager implements CityService {
 	
 	private CityDetailDto convertToDto(City city) {
 		
-		CityDetailDto cityDto = modelMapper.map(city, CityDetailDto.class);
-		return cityDto;
+		return modelMapper.map(city, CityDetailDto.class);
 	}
 
 }

@@ -35,21 +35,21 @@ public class ApplicationUserManager implements ApplicationUserService {
 	@Override
 	public DataResult<ApplicationUser> getById(int userId) {
 		
-		return new SuccessDataResult<ApplicationUser>(this.applicationUserDao.getById(userId));
+		return new SuccessDataResult<>(this.applicationUserDao.getById(userId));
 	}
 	
 
 	@Override
 	public DataResult<List<ApplicationUser>> getAll() {
 		
-		return new SuccessDataResult<List<ApplicationUser>>(this.applicationUserDao.findAll());
+		return new SuccessDataResult<>(this.applicationUserDao.findAll());
 	}
 
 	
 	@Override
 	public DataResult<ApplicationUser> getByEmail(String email) {
 		
-		return new SuccessDataResult<ApplicationUser>(this.applicationUserDao.getByEmail(email));
+		return new SuccessDataResult<>(this.applicationUserDao.getByEmail(email));
 	}
 	
 }
